@@ -7,12 +7,16 @@ public class Manche{
     private Couleur[] combinaison_actuelle;
     private Indice[] indices;
     private int taille_combi;
-    public Manche(Partie p)
+    private int nbtentaitve;
+    private Couleur[] possibilite;
+
+    public Manche(int nbpions_combi,int nb_tentative,Couleur[] possible)
     {
-        super();
-        this.combinaison_secrete = new Couleur[p.getNbpions_combi()];
-        this.combinaison_actuelle = new Couleur[p.getNbpions_combi()];
-        this.indices = new Indice[p.getNbpions_combi()];
+        this.combinaison_secrete = new Couleur[nbpions_combi];
+        this.combinaison_actuelle = new Couleur[nbpions_combi];
+        this.indices = new Indice[nbpions_combi];
+        this.nbtentaitve = nb_tentative;
+        this.possibilite = possible;
         this.taille_combi = this.combinaison_secrete.length;
         for (int i = 0; i < this.combinaison_actuelle.length; i++) {
             this.combinaison_actuelle[i] = Couleur.NONE;
@@ -20,30 +24,21 @@ public class Manche{
         for (int k = 0; k < this.combinaison_secrete.length; k++) {
             this.indices[k] = Indice.INCORRECT;
         }
-        System.out.println(p.getNbpions_combi());
     }
 
     public void setCombiSecrete()
     {
-        Couleur[] valeurs = Couleur.values();
-        for (int i = 0; i< this.combinaison_secrete.length;i++)
+        for (int i = 0; i< this.taille_combi;i++)
         {
-            int indexAleatoire = new Random().nextInt(valeurs.length);
-            if(indexAleatoire == 0)
-            {
-                while(indexAleatoire == 0)
-                {
-                    indexAleatoire = new Random().nextInt(valeurs.length);
-                }
-            }
-            Couleur couleurAleatoire = valeurs[indexAleatoire];
+            int indexAleatoire = new Random().nextInt(this.possibilite.length);
+            Couleur couleurAleatoire = this.possibilite[indexAleatoire];
             this.combinaison_secrete[i] = couleurAleatoire;
         }
     }
 
     public void affiche_combi()
     {
-        for (int i = 0; i < this.combinaison_actuelle.length; i++)
+        for (int i = 0; i < this.taille_combi; i++)
         {
             System.out.println("Élément " + i + " : " + this.combinaison_actuelle[i]);
         }
@@ -51,7 +46,7 @@ public class Manche{
 
     public void affiche_combisecrete()
     {
-        for (int i = 0; i < this.combinaison_secrete.length; i++)
+        for (int i = 0; i < this.taille_combi; i++)
         {
             System.out.println("Élément " + i + " : " + this.combinaison_secrete[i]);
         }
@@ -59,7 +54,7 @@ public class Manche{
 
     public void Change_Color(Couleur[] changement)
     {
-        for(int i = 0;i<this.combinaison_actuelle.length;i++)
+        for(int i = 0;i<this.taille_combi;i++)
         {
             this.combinaison_actuelle[i] = changement[i];
         }

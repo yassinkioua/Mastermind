@@ -110,7 +110,6 @@ public class StartWindow extends JFrame {
             p.setManche(roundsPerMatchSlider.getValue());
             p.setNb_tentative(attemptsSlider.getValue());
             p.setNbpions_combi(pinsPerCombinationSlider.getValue());
-            System.out.println(pinsPerCombinationSlider.getValue());
             new GameWindow(p);
             System.exit(0);
         });
