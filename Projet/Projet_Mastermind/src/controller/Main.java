@@ -1,13 +1,11 @@
 package controller;
 
 import model.Partie;
+import view.StartWindow;
 
 public class Main {
     public static void main(String[] args)
     {
-        Partie p1 = new Partie();
-        p1.play();
+        new StartWindow();
     }
-
-
 }

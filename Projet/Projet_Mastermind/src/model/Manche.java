@@ -2,17 +2,17 @@ package model;
 
 import java.util.Random;
 
-public class Manche extends Partie{
+public class Manche{
     private Couleur[] combinaison_secrete;
     private Couleur[] combinaison_actuelle;
     private Indice[] indices;
     private int taille_combi;
-    public Manche()
+    public Manche(Partie p)
     {
         super();
-        this.combinaison_secrete = new Couleur[getNbpions_combi()];
-        this.combinaison_actuelle = new Couleur[getNbpions_combi()];
-        this.indices = new Indice[getNbpions_combi()];
+        this.combinaison_secrete = new Couleur[p.getNbpions_combi()];
+        this.combinaison_actuelle = new Couleur[p.getNbpions_combi()];
+        this.indices = new Indice[p.getNbpions_combi()];
         this.taille_combi = this.combinaison_secrete.length;
         for (int i = 0; i < this.combinaison_actuelle.length; i++) {
             this.combinaison_actuelle[i] = Couleur.NONE;
@@ -20,6 +20,7 @@ public class Manche extends Partie{
         for (int k = 0; k < this.combinaison_secrete.length; k++) {
             this.indices[k] = Indice.INCORRECT;
         }
+        System.out.println(p.getNbpions_combi());
     }
 
     public void setCombiSecrete()
@@ -68,13 +69,15 @@ public class Manche extends Partie{
     {
         for (int i = 0; i<this.taille_combi;i++)
         {
+            boolean bien_place = false;
             if (this.combinaison_actuelle[i] == this.combinaison_secrete[i])
             {
                 this.indices[i] = Indice.BONNE_PLACE;
+                bien_place = true;
             }
             for (int j = 0; j < this.taille_combi; j++)
             {
-                if (this.combinaison_actuelle[i] == this.combinaison_secrete[j])
+                if (this.combinaison_actuelle[i] == this.combinaison_secrete[j] && !bien_place)
                 {
                     this.indices[i] = Indice.MAUVAISE_PLACE;
                 }
