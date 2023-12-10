@@ -6,6 +6,7 @@ import view.StartWindow;
 public class Main {
     public static void main(String[] args)
     {
+        //Rendu 1
         new StartWindow();
     }
 }
