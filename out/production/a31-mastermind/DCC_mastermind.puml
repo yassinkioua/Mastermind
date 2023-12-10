@@ -1,0 +1,42 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+skinparam style strictuml
+skinparam classAttributeIconSize 0
+skinparam classFontStyle Bold
+hide enum methods
+hide interface attributes
+
+package controller {
+    class GameController{}
+    class Main{}
+}
+package model {
+    enum Couleur {
+        NONE
+        RED
+        ORANGE
+        YELLOW
+        PURPLE
+        BLUE
+        GREEN
+        BLACK
+        WHITE
+    }
+
+    enum Indice {
+    }
+
+    interface Observeur{}
+
+}
+package view {
+    class EndWindows{}
+    class GameWindows{}
+    class Historic{}
+    class StartWindows{}
+    class ObserveurConcret{}
+}
+
+
+@enduml

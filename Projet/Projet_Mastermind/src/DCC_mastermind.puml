@@ -7,36 +7,129 @@ skinparam classFontStyle Bold
 hide enum methods
 hide interface attributes
 
-package controller {
+package controller
+{
     class GameController{}
-    class Main{}
 }
-package model {
-    enum Couleur {
-        NONE
-        RED
-        ORANGE
-        YELLOW
-        PURPLE
-        BLUE
-        GREEN
-        BLACK
-        WHITE
+
+package model
+{
+    class Partie
+    {
+        - manche: int
+        - nbpions: int
+        - nbpions_combi: int
+        - nb_tentative: int
+
+        + Partie()
+        + play(): void
+        + setCouleurPossible(): Couleur[]
+        + setManche(m: int): void
+        + setNbpions(nbp: int): void
+        + setNbpions_combi(nbc: int): void
+        + setNb_tentative(t: int): void
     }
 
-    enum Indice {
+    class Manche
+    {
+        - combinaison_secrete: Couleur[]
+        - combinaison_actuelle: Couleur[]
+        - indices: Indice[]
+        - taille_combi: int
+        - nbtentative: int
+        - possibilite: Couleur[]
+
+        + Manche(nbpions_combi: int, nb_tentative: int, possible: Couleur[])
+        + setCombiSecrete(): void
+        + affiche_combi(): void
+        + affiche_combisecrete(): void
+        + Change_Color(changement: Couleur[]): void
+        + Cree_Indice(): void
+        + affiche_indice(): void
     }
 
-    interface Observeur{}
+    enum Couleur
+    {
+        NONE, RED, ORANGE, YELLOW, PURPLE, BLUE, GREEN, BLACK, WHITE
+    }
+
+    enum Indice
+    {
+        BONNE_PLACE, MAUVAISE_PLACE, INCORRECT
+    }
+
+    interface CreateIndiceStrategy <<interface>>
+    {
+        + CreerIndice(indices: Indice[]): Indice[]
+    }
+
+    class CreationFacile implements CreateIndiceStrategy
+    {
+        + CreerIndice(indices: Indice[]): Indice[]
+    }
+
+    class CreationClassique implements CreateIndiceStrategy
+    {
+        + CreerIndice(indices: Indice[]): Indice[]
+    }
+
+    class CreationNumerique implements CreateIndiceStrategy
+    {
+        + CreerIndice(indices: Indice[]): Indice[]
+    }
+
+    interface Observeur <<interface>>
+    {
+        void updateIndice(Indice indice)
+    }
 
 }
-package view {
-    class EndWindows{}
-    class GameWindows{}
-    class Historic{}
-    class StartWindows{}
-    class ObserveurConcret{}
+
+package view
+{
+    class StartWindow
+    {
+        - cardLayout: CardLayout
+        - cardPanel: JPanel
+        - playerNameTextField: JTextField
+        - nextButton: JButton
+        - roundsSlider: JSlider
+        - roundsPerMatchSlider: JSlider
+        - attemptsSlider: JSlider
+        - pinsPerCombinationSlider: JSlider
+        - backButton: JButton
+        - startGameButton: JButton
+
+        + StartWindow()
+        - initializeUI(): void
+        - createFirstCardPanel(): JPanel
+        - createSecondCardPanel(): JPanel
+        - createSliderPanel(label: String, slider: JSlider): JPanel
+        - createSlider(min: int, max: int, initial: int): JSlider
+    }
+
+    class ObserverConcret implements model.Observeur
+    {
+        + updateIndice(indice: Indice): void
+    }
+
+    class GameWindow implements model.Observeur
+    {
+        + GameWindow(p: Partie)
+        + updateIndice(indice: Indice): void
+    }
+
+    class EndWindow
+    {
+        + EndWindow()
+    }
 }
 
-
+model.Partie --> "1..*" model.Manche : contient
+model.Manche *-- "1..*" model.Couleur : compose
+model.Manche --> model.Indice : utilise
+model.Manche --> view.ObserverConcret : notifie
+view.StartWindow --> model.Partie : utilise
+view.GameWindow --> model.Partie : utilise
+view.EndWindow --> model.Partie : utilise
 @enduml
