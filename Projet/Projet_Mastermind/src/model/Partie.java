@@ -1,25 +1,38 @@
 package model;
 
+import view.ObserveurConcretButton;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Partie {
     private int manche;
-    private int nbpions;
-    private int nbpions_combi;
-    private int nb_tentative;
+    public int nbpions;
+    public Color color;
+    public int nbpions_combi;
+    public int nb_tentative;
+    private Color[] couleur_possible;
+    IndiceStrategy context;
+    private final List<ButtonObserveur> observers = new ArrayList<ButtonObserveur>();
+    ObserveurConcretButton ob1 = new ObserveurConcretButton();
+    ObserveurConcretButton ob2 = new ObserveurConcretButton();
+    ObserveurConcretButton ob3 = new ObserveurConcretButton();
+    ObserveurConcretButton ob4 = new ObserveurConcretButton();
     public Partie()
     {
-        this.manche = 3;
-        this.nbpions = 8;
-        this.nbpions_combi = 4;
-        this.nb_tentative = 10;
-
+        this.color = Color.LIGHT_GRAY;
+        this.observers.add(ob1);
+        this.observers.add(ob2);
+        this.observers.add(ob3);
+        this.observers.add(ob4);
     }
 
     public void play()
     {
-        Couleur[] couleur_possible = setCouleurPossible();
-        Manche m1 = new Manche(this.nbpions_combi,this.nb_tentative,couleur_possible);
+        Manche m1 = new Manche(this.nbpions_combi,this.nb_tentative,this.couleur_possible);
         m1.setCombiSecrete();
-        Couleur[] c = {Couleur.ORANGE,Couleur.GREEN,Couleur.WHITE,Couleur.YELLOW,Couleur.RED,Couleur.BLUE};
+        Color[] c = {Color.ORANGE,Color.GREEN,Color.WHITE,Color.YELLOW,Color.RED,Color.BLUE};
         m1.Change_Color(c);
         m1.Cree_Indice();
         m1.affiche_combi();
@@ -28,30 +41,35 @@ public class Partie {
         System.out.println("-----------------------------------------------------");
         m1.affiche_indice();
     }
-    public Couleur[] setCouleurPossible()
+    public void change_strategy(IndiceStrategy c)
     {
-        Couleur[] possible = new Couleur[this.nbpions];
-        Couleur[] values = Couleur.values();
-        for(int i = 0;i<this.nbpions;i++)
-        {
-            possible[i] = values[i+1];
+        this.context = c;
+        System.out.println("Stratégie changée ! ");
+    }
+    public void setCouleurPossible()
+    {
+        this.couleur_possible = new Color[this.nbpions];
+
+        Color[] couleursPossibles = {
+                Color.RED,
+                Color.ORANGE,
+                Color.YELLOW,
+                Color.MAGENTA,
+                Color.BLUE,
+                Color.GREEN,
+                Color.BLACK,
+                Color.WHITE
+        };
+
+        for (int i = 0; i < this.nbpions; i++) {
+            this.couleur_possible[i] = couleursPossibles[i % couleursPossibles.length];
         }
-        return possible;
     }
-    public void setManche(int m)
-    {
-        this.manche = m;
-    }
-    public void setNbpions(int nbp)
-    {
-        this.nbpions = nbp;
-    }
-    public void setNbpions_combi(int nbc)
-    {
-        this.nbpions_combi = nbc;
-    }
-    public void setNb_tentative(int t)
-    {
-        this.nb_tentative = t;
-    }
+    public Color[] getColorPossible(){ return this.couleur_possible;}
+    public void setNbManches(int m) {this.manche = m;}
+    public void setNbpions(int nbp) {this.nbpions = nbp;}
+    public void setNbpions_combi(int nbc) {this.nbpions_combi = nbc;}
+    public void setNbTentatives(int t) {this.nb_tentative = t;}
+    public void addObserveurs(ButtonObserveur b) { this.observers.add(b);}
+
 }

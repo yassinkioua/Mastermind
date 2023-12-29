@@ -1,28 +1,17 @@
 package view;
 
-import controller.GameController;
+import controller.PartieController;
 import model.Partie;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 public class StartWindow extends JFrame {
 
     private CardLayout cardLayout;
     private JPanel cardPanel;
-    private JTextField playerNameTextField;
-    private JButton nextButton;
-
-    private JSlider roundsSlider;
-    private JSlider roundsPerMatchSlider;
-    private JSlider attemptsSlider;
-    private JSlider pinsPerCombinationSlider;
-    private JButton backButton;
-    private JButton startGameButton;
 
     public StartWindow() {
         initializeUI();
@@ -57,16 +46,11 @@ public class StartWindow extends JFrame {
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
         panel.add(titleLabel, BorderLayout.NORTH);
 
-        JLabel rulesLabel = new JLabel("Les règles sont disponibles ici : https://fr.wikihow.com/jouer-au-Mastermind");
-        titleLabel.setHorizontalAlignment(JLabel.LEFT);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        panel.add(titleLabel, BorderLayout.NORTH);
-
         JPanel pseudonymPanel = new JPanel(new FlowLayout());
         pseudonymPanel.add(new JLabel("Indiquez votre pseudonyme:"));
-        playerNameTextField = new JTextField(15);
+        JTextField playerNameTextField = new JTextField(15);
         pseudonymPanel.add(playerNameTextField);
-        nextButton = new JButton("Suivant");
+        JButton nextButton = new JButton("Suivant");
         pseudonymPanel.add(nextButton);
         panel.add(pseudonymPanel, BorderLayout.SOUTH);
 
@@ -85,33 +69,37 @@ public class StartWindow extends JFrame {
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         JPanel sliderPanel = new JPanel(new GridLayout(5, 1));
+        JSlider roundsSlider;
         sliderPanel.add(createSliderPanel("Indiquez le nombre de couleurs:", roundsSlider = createSlider(4, 8, 8)));
+        JSlider roundsPerMatchSlider;
         sliderPanel.add(createSliderPanel("Indiquez le nombre de manches:", roundsPerMatchSlider = createSlider(1, 5, 3)));
+        JSlider attemptsSlider;
         sliderPanel.add(createSliderPanel("Indiquez le nombre de tentatives:", attemptsSlider = createSlider(10, 12, 10)));
+        JSlider pinsPerCombinationSlider;
         sliderPanel.add(createSliderPanel("Indiquez le nombre de pions de combinaisons:", pinsPerCombinationSlider = createSlider(4, 6, 4)));
 
-        // Ajout du panneau des sliders au centre
         panel.add(sliderPanel, BorderLayout.CENTER);
 
-        // Ajout des boutons en bas (au sud)
         JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        backButton = new JButton("Revenir en arrière");
-        startGameButton = new JButton("Lancer la partie");
+        JButton backButton = new JButton("Revenir en arrière");
+        JButton startGameButton = new JButton("Lancer la partie");
 
         buttonsPanel.add(backButton);
         buttonsPanel.add(startGameButton);
 
-        // Ajout du panneau des boutons en bas (au sud)
         panel.add(buttonsPanel, BorderLayout.SOUTH);
 
-        startGameButton.addActionListener(ActionEvent -> {
-            Partie p = new Partie();
-            p.setNbpions(roundsSlider.getValue());
-            p.setManche(roundsPerMatchSlider.getValue());
-            p.setNb_tentative(attemptsSlider.getValue());
-            p.setNbpions_combi(pinsPerCombinationSlider.getValue());
-            new GameWindow(p);
-            System.exit(0);
+        startGameButton.addActionListener(ActionEvent ->
+        {
+            PartieController pc = new PartieController();
+            pc.addCurentPions(roundsSlider.getValue());
+            pc.addCurentManche(roundsPerMatchSlider.getValue());
+            pc.addCurrentTentative(attemptsSlider.getValue());
+            pc.addCurentPionsCombi(pinsPerCombinationSlider.getValue());
+            pc.addCouleurPossible();
+            GameWindow gameWindow = new GameWindow(pc);
+            gameWindow.setVisible(true);
+            dispose();
         });
 
         backButton.addActionListener(new ActionListener() {
@@ -130,7 +118,6 @@ public class StartWindow extends JFrame {
         labelComponent.setHorizontalAlignment(JLabel.RIGHT);
         sliderPanel.add(labelComponent, BorderLayout.WEST);
         sliderPanel.add(slider, BorderLayout.CENTER);
-
         return sliderPanel;
     }
 
