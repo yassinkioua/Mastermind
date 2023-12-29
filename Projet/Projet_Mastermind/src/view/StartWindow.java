@@ -97,7 +97,9 @@ public class StartWindow extends JFrame {
             pc.addCurrentTentative(attemptsSlider.getValue());
             pc.addCurentPionsCombi(pinsPerCombinationSlider.getValue());
             pc.addCouleurPossible();
+            pc.initializeManche();
             pc.affichage();
+
             GameWindow gameWindow = new GameWindow(pc);
             gameWindow.setVisible(true);
             dispose();

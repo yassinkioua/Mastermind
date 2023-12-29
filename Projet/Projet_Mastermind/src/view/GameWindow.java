@@ -1,7 +1,10 @@
 package view;
 
+import controller.MancheController;
 import controller.PartieController;
 import model.ButtonObserveur;
+import model.Manche;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -11,6 +14,9 @@ import java.util.Arrays;
 
 public class GameWindow extends JFrame implements ButtonObserveur {
     private final PartieController controller;
+    private int currentLineHeight = 0;
+    private int initLineCount = 0;
+    private JPanel mainPanel;
     private final JButton[] buttons = new JButton[4];
 
     public GameWindow(PartieController pc) {
@@ -20,22 +26,21 @@ public class GameWindow extends JFrame implements ButtonObserveur {
 
     private void initializeUI() {
         setTitle("Fenêtre de jeu");
-        setSize(600, 800);
+        if (controller.getNbTentative() == 10)
+            setSize(600, 750);
+        else if (controller.getNbTentative() == 11)
+            setSize(600, 790);
+        else if (controller.getNbTentative() == 12)
+            setSize(600, 840);
+        setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        JPanel panel = new JPanel(new GridLayout(1, 4, 10, 0));
-        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        this.mainPanel = new JPanel(new BorderLayout());
+        this.mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        buttons[0] = createColorButton(1);
-        buttons[1] = createColorButton(2);
-        buttons[2] = createColorButton(3);
-        buttons[3] = createColorButton(4);
-
-        panel.add(buttons[0]);
-        panel.add(buttons[1]);
-        panel.add(buttons[2]);
-        panel.add(buttons[3]);
+        initLine();
+        JPanel bottomButtonPanel = new JPanel(new GridLayout(4, 1, 0, 10));
 
         JButton validateButton = new JButton("Valider");
         JButton resetButton = new JButton("Réinitialiser");
@@ -46,8 +51,13 @@ public class GameWindow extends JFrame implements ButtonObserveur {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Color[] validate = getValidationTableau();
-                // Appel de la méthode pour traiter la validation dans le contrôleur
-                // (vous devrez créer cette méthode dans PartieController)
+                controller.testCombinaison(validate);
+                if (!controller.hasWon() && controller.getNbTentative() > initLineCount) {
+                    currentLineHeight += 50;
+                    initLine();
+                    mainPanel.revalidate();
+                    mainPanel.repaint();
+                }
             }
         });
 
@@ -78,13 +88,46 @@ public class GameWindow extends JFrame implements ButtonObserveur {
             }
         });
 
-        panel.add(validateButton);
-        panel.add(resetButton);
-        panel.add(nextRoundButton);
-        panel.add(changeDisplayModeButton);
+        bottomButtonPanel.add(validateButton);
+        bottomButtonPanel.add(resetButton);
+        bottomButtonPanel.add(nextRoundButton);
+        bottomButtonPanel.add(changeDisplayModeButton);
 
-        getContentPane().add(panel, BorderLayout.SOUTH);
+        this.mainPanel.add(bottomButtonPanel, BorderLayout.SOUTH);
+
+        getContentPane().add(this.mainPanel);
     }
+
+    private void initLine()
+    {
+        if (initLineCount !=0)
+            for (JButton button : buttons)
+                button.setEnabled(false);
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 5, 10, 0));
+
+        buttons[0] = createColorButton(1);
+        buttons[1] = createColorButton(2);
+        buttons[2] = createColorButton(3);
+        buttons[3] = createColorButton(4);
+
+        JPanel test = new JPanel(new GridLayout(1, 4, 0, 0));
+        JButton[] indice = createIndiceButtons();
+        for (JButton button : indice)
+            test.add(button);
+        buttonPanel.add(buttons[0]);
+        buttonPanel.add(buttons[1]);
+        buttonPanel.add(buttons[2]);
+        buttonPanel.add(buttons[3]);
+        buttonPanel.add(test);
+
+        for (JButton button : buttons)
+            button.setPreferredSize(new Dimension(50, 40));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(currentLineHeight, 0, 0, 0));
+
+        this.mainPanel.add(buttonPanel, BorderLayout.NORTH);
+        initLineCount+=1;
+    }
+
 
     private JButton createColorButton(int buttonIndex) {
         JButton button = new JButton();
@@ -93,8 +136,7 @@ public class GameWindow extends JFrame implements ButtonObserveur {
         button.putClientProperty("buttonIndex", buttonIndex);
         button.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e)
-            {
+            public void actionPerformed(ActionEvent e) {
                 JButton clickedButton = (JButton) e.getSource();
                 int currentColorIndex = (int) clickedButton.getClientProperty("currentColorIndex");
                 int buttonIndex = (int) clickedButton.getClientProperty("buttonIndex");
@@ -104,20 +146,28 @@ public class GameWindow extends JFrame implements ButtonObserveur {
 
         return button;
     }
+    private JButton[] createIndiceButtons() {
+        JButton[] buttons = new JButton[4];
 
+        for (int i = 0; i < 4; i++) {
+            JButton button = new JButton();
+            button.setBackground(Color.WHITE);
+            button.setEnabled(false);
+            buttons[i] = button;
+        }
 
-    public void updateButtons(JButton button, Color color)
-    {
+        return buttons;
+    }
+
+    public void updateButtons(JButton button, Color color) {
         button.setBackground(color);
         button.repaint();
     }
 
-    public Color[] getValidationTableau()
-    {
+    public Color[] getValidationTableau() {
         Color[] tableau = new Color[4];
         for (int i = 0; i < 4; i++)
             tableau[i] = buttons[i].getBackground();
         return tableau;
     }
-
 }

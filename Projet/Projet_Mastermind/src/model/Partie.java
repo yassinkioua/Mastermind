@@ -23,7 +23,7 @@ public class Partie {
         this.observers.add(ob);
     }
 
-    public void play()
+    /*public void play()
     {
         Manche m1 = new Manche(this.nbpions_combi,this.nb_tentative,this.couleur_possible);
         m1.setCombiSecrete();
@@ -36,6 +36,7 @@ public class Partie {
         System.out.println("-----------------------------------------------------");
         m1.affiche_indice();
     }
+     */
     public void change_strategy(IndiceStrategy c)
     {
         this.context = c;
@@ -79,6 +80,10 @@ public class Partie {
         for (ButtonObserveur ob : observers)
             ob.updateButtons(button, color);
     }
+    public int getNbpions_combi() { return this.nbpions_combi;}
+    public int getNbTentatives() { return this.nb_tentative;}
+    public Color[] getCouleurPossible() { return this.couleur_possible;}
+
     public void Affichage()
     {
         System.out.println("------------------- MASTERMIND -----------------");
