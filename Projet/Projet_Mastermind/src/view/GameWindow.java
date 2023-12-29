@@ -10,12 +10,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class GameWindow extends JFrame implements ButtonObserveur {
-    private PartieController controller;
-    private JButton[] buttons = new JButton[4];
-    private int currentColorIndex1 = 0;
-    private int currentColorIndex2 = 0;
-    private int currentColorIndex3 = 0;
-    private int currentColorIndex4 = 0;
+    private final PartieController controller;
+    private final JButton[] buttons = new JButton[4];
 
     public GameWindow(PartieController pc) {
         this.controller = pc;
@@ -31,10 +27,10 @@ public class GameWindow extends JFrame implements ButtonObserveur {
         JPanel panel = new JPanel(new GridLayout(1, 4, 10, 0));
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        buttons[0] = createColorButton();
-        buttons[1] = createColorButton();
-        buttons[2] = createColorButton();
-        buttons[3] = createColorButton();
+        buttons[0] = createColorButton(1);
+        buttons[1] = createColorButton(2);
+        buttons[2] = createColorButton(3);
+        buttons[3] = createColorButton(4);
 
         panel.add(buttons[0]);
         panel.add(buttons[1]);
@@ -82,7 +78,6 @@ public class GameWindow extends JFrame implements ButtonObserveur {
             }
         });
 
-        // Ajout des boutons d'actions au panneau
         panel.add(validateButton);
         panel.add(resetButton);
         panel.add(nextRoundButton);
@@ -91,54 +86,37 @@ public class GameWindow extends JFrame implements ButtonObserveur {
         getContentPane().add(panel, BorderLayout.SOUTH);
     }
 
-    private JButton createColorButton() {
+    private JButton createColorButton(int buttonIndex) {
         JButton button = new JButton();
         button.setPreferredSize(new Dimension(50, 50));
-
+        button.putClientProperty("currentColorIndex", 0);
+        button.putClientProperty("buttonIndex", buttonIndex);
         button.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e)
+            {
                 JButton clickedButton = (JButton) e.getSource();
-                Color currentColor;
-                int currentColorIndex;
-
-                if (clickedButton == buttons[0]) {
-                    currentColorIndex = currentColorIndex1;
-                    currentColor = controller.getPossibleColor()[currentColorIndex];
-                    currentColorIndex1 = (currentColorIndex1 + 1) % controller.getPossibleColor().length;
-                } else if (clickedButton == buttons[1]) {
-                    currentColorIndex = currentColorIndex2;
-                    currentColor = controller.getPossibleColor()[currentColorIndex];
-                    currentColorIndex2 = (currentColorIndex2 + 1) % controller.getPossibleColor().length;
-                } else if (clickedButton == buttons[2]) {
-                    currentColorIndex = currentColorIndex3;
-                    currentColor = controller.getPossibleColor()[currentColorIndex];
-                    currentColorIndex3 = (currentColorIndex3 + 1) % controller.getPossibleColor().length;
-                } else if (clickedButton == buttons[3]) {
-                    currentColorIndex = currentColorIndex4;
-                    currentColor = controller.getPossibleColor()[currentColorIndex];
-                    currentColorIndex4 = (currentColorIndex4 + 1) % controller.getPossibleColor().length;
-                } else {
-                    return;
-                }
-
-                updateButtons(clickedButton, currentColor);
+                int currentColorIndex = (int) clickedButton.getClientProperty("currentColorIndex");
+                int buttonIndex = (int) clickedButton.getClientProperty("buttonIndex");
+                controller.getNextColor(clickedButton, currentColorIndex, buttonIndex);
             }
         });
 
         return button;
     }
 
-    public void updateButtons(JButton button, Color color) {
+
+    public void updateButtons(JButton button, Color color)
+    {
         button.setBackground(color);
         button.repaint();
     }
 
-    public Color[] getValidationTableau() {
+    public Color[] getValidationTableau()
+    {
         Color[] tableau = new Color[4];
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 4; i++)
             tableau[i] = buttons[i].getBackground();
-        }
         return tableau;
     }
 

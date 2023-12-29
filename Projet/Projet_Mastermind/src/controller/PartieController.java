@@ -5,6 +5,7 @@ import model.IndiceStrategy;
 import model.Partie;
 import view.GameWindow;
 
+import javax.swing.*;
 import java.awt.*;
 
 
@@ -24,6 +25,6 @@ public class PartieController
     public void addCurentPionsCombi(int nbPionsCombi){ partie.setNbpions_combi(nbPionsCombi);}
     public void addCurentManche(int m) { partie.setNbManches(m);}
     public void addCouleurPossible() { partie.setCouleurPossible();}
-    public Color[] getPossibleColor() { return partie.getColorPossible();}
-    public void start() { partie.play();}
+    public void affichage() { partie.Affichage();}
+    public void getNextColor(JButton button, int currentColorIndex, int buttonIndex) {partie.NextColor(button, currentColorIndex, buttonIndex);}
 }

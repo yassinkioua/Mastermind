@@ -2,6 +2,7 @@ package model;
 
 import view.ObserveurConcretButton;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,17 +16,11 @@ public class Partie {
     private Color[] couleur_possible;
     IndiceStrategy context;
     private final List<ButtonObserveur> observers = new ArrayList<ButtonObserveur>();
-    ObserveurConcretButton ob1 = new ObserveurConcretButton();
-    ObserveurConcretButton ob2 = new ObserveurConcretButton();
-    ObserveurConcretButton ob3 = new ObserveurConcretButton();
-    ObserveurConcretButton ob4 = new ObserveurConcretButton();
+    ObserveurConcretButton ob = new ObserveurConcretButton();
     public Partie()
     {
         this.color = Color.LIGHT_GRAY;
-        this.observers.add(ob1);
-        this.observers.add(ob2);
-        this.observers.add(ob3);
-        this.observers.add(ob4);
+        this.observers.add(ob);
     }
 
     public void play()
@@ -65,11 +60,32 @@ public class Partie {
             this.couleur_possible[i] = couleursPossibles[i % couleursPossibles.length];
         }
     }
-    public Color[] getColorPossible(){ return this.couleur_possible;}
+
+    public void NextColor(JButton button, int currentColorIndex, int buttonIndex)
+    {
+        Color currentColor = couleur_possible[currentColorIndex];
+        int nextColorIndex = (currentColorIndex + 1) % couleur_possible.length;
+        button.putClientProperty("currentColorIndex", nextColorIndex);
+        button.putClientProperty("index", buttonIndex);
+        notifyChanges(button, currentColor);
+    }
     public void setNbManches(int m) {this.manche = m;}
     public void setNbpions(int nbp) {this.nbpions = nbp;}
     public void setNbpions_combi(int nbc) {this.nbpions_combi = nbc;}
     public void setNbTentatives(int t) {this.nb_tentative = t;}
     public void addObserveurs(ButtonObserveur b) { this.observers.add(b);}
-
+    public void notifyChanges(JButton button, Color color)
+    {
+        for (ButtonObserveur ob : observers)
+            ob.updateButtons(button, color);
+    }
+    public void Affichage()
+    {
+        System.out.println("------------------- MASTERMIND -----------------");
+        System.out.println("Nombre de manches : " + this.manche);
+        System.out.println("Nombre de pions : " + this.nbpions);
+        System.out.println("Nombre de combinaisons de pions " + this.nbpions_combi);
+        System.out.println("Nombre de tentatives : " + this.nb_tentative);
+        System.out.println("------------------------------------------------");
+    }
 }
