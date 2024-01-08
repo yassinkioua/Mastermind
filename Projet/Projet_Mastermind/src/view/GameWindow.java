@@ -63,28 +63,31 @@ public class GameWindow extends JFrame implements ButtonObserveur {
 
         resetButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                // Code pour réinitialiser la combinaison
-                // Appelez la méthode correspondante dans votre modèle (partie)
-                // Vous pouvez également mettre à jour l'interface en conséquence
+            public void actionPerformed(ActionEvent e)
+            {
+                for (JButton button : buttons)
+                    updateButtons(button, Color.LIGHT_GRAY);
             }
         });
 
         nextRoundButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Code pour passer à la manche suivante
-                // Appelez la méthode correspondante dans votre modèle (partie)
-                // Vous pouvez également mettre à jour l'interface en conséquence
+                controller.initializeManche();
+                currentLineHeight = 0;
+                initLineCount = 0;
+                mainPanel.removeAll();
+                initializeUI();
+                mainPanel.revalidate();
+                mainPanel.repaint();
             }
         });
+
 
         changeDisplayModeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Code pour changer le mode d'affichage des indices
-                // Appelez la méthode correspondante dans votre modèle (partie)
-                // Vous pouvez également mettre à jour l'interface en conséquence
+
             }
         });
 
@@ -120,6 +123,7 @@ public class GameWindow extends JFrame implements ButtonObserveur {
         buttonPanel.add(buttons[3]);
         buttonPanel.add(test);
 
+
         for (JButton button : buttons)
             button.setPreferredSize(new Dimension(50, 40));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(currentLineHeight, 0, 0, 0));
@@ -132,6 +136,7 @@ public class GameWindow extends JFrame implements ButtonObserveur {
     private JButton createColorButton(int buttonIndex) {
         JButton button = new JButton();
         button.setPreferredSize(new Dimension(50, 50));
+        button.setBackground(Color.LIGHT_GRAY);
         button.putClientProperty("currentColorIndex", 0);
         button.putClientProperty("buttonIndex", buttonIndex);
         button.addActionListener(new ActionListener() {
