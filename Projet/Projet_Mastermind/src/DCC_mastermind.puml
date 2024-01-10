@@ -48,11 +48,6 @@ package model
         + affiche_indice()
     }
 
-    enum Couleur
-    {
-        NONE, RED, ORANGE, YELLOW, PURPLE, BLUE, GREEN, BLACK, WHITE
-    }
-
     enum Indice
     {
         BONNE_PLACE, MAUVAISE_PLACE, INCORRECT
@@ -125,8 +120,13 @@ package view
     }
 }
 
+<<<<<<< HEAD
 model.Partie --> "1..5" model.Manche : contient
 model.Manche *-- "1..*" model.Couleur : - combinaison*
+=======
+model.Partie --> "1..*" model.Manche : contient
+model.Manche *-- "1..*" model.Color : compose
+>>>>>>> main
 model.Manche --> model.Indice : utilise
 model.Manche --> view.ObserverConcret : notifie
 view.StartWindow --> model.Partie : utilise

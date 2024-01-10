@@ -1,8 +1,7 @@
 package view;
 
-import model.Couleur;
 import model.Indice;
-import model.Observeur;
+import model.ButtonObserveur;
 
 import javax.swing.*;
 public class EndWindow extends JFrame {
