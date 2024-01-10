@@ -87,8 +87,8 @@ public class StartWindow extends JFrame {
         JPanel sliderPanel = new JPanel(new GridLayout(5, 1));
         sliderPanel.add(createSliderPanel("Indiquez le nombre de couleurs:", roundsSlider = createSlider(4, 8, 8)));
         sliderPanel.add(createSliderPanel("Indiquez le nombre de manches:", roundsPerMatchSlider = createSlider(1, 5, 3)));
-        sliderPanel.add(createSliderPanel("Indiquez le nombre de tentatives:", attemptsSlider = createSlider(10, 12, 10)));
-        sliderPanel.add(createSliderPanel("Indiquez le nombre de pions de combinaisons:", pinsPerCombinationSlider = createSlider(4, 6, 4)));
+        sliderPanel.add(createSliderPanel("Indiquez le nombre de tentatives:", attemptsSlider = createSlider(2, 12, 10)));
+        sliderPanel.add(createSliderPanel("Indiquez le nombre de pions de combinaisons:", pinsPerCombinationSlider = createSlider(2, 6, 4)));
 
         // Ajout du panneau des sliders au centre
         panel.add(sliderPanel, BorderLayout.CENTER);

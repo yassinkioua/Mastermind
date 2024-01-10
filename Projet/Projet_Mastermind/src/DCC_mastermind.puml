@@ -22,12 +22,12 @@ package model
         - nb_tentative: int
 
         + Partie()
-        + play(): void
+        + play()
         + setCouleurPossible(): Couleur[]
-        + setManche(m: int): void
-        + setNbpions(nbp: int): void
-        + setNbpions_combi(nbc: int): void
-        + setNb_tentative(t: int): void
+        + setManche(m: int)
+        + setNbpions(nbp: int)
+        + setNbpions_combi(nbc: int)
+        + setNb_tentative(t: int)
     }
 
     class Manche
@@ -40,12 +40,12 @@ package model
         - possibilite: Couleur[]
 
         + Manche(nbpions_combi: int, nb_tentative: int, possible: Couleur[])
-        + setCombiSecrete(): void
-        + affiche_combi(): void
-        + affiche_combisecrete(): void
-        + Change_Color(changement: Couleur[]): void
-        + Cree_Indice(): void
-        + affiche_indice(): void
+        + setCombiSecrete()
+        + affiche_combi()
+        + affiche_combisecrete()
+        + Change_Color(changement: Couleur[])
+        + Cree_Indice()
+        + affiche_indice()
     }
 
     enum Couleur
@@ -80,7 +80,7 @@ package model
 
     interface Observeur <<interface>>
     {
-        void updateIndice(Indice indice)
+        +updateIndice(Indice indice)
     }
 
 }
@@ -101,7 +101,7 @@ package view
         - startGameButton: JButton
 
         + StartWindow()
-        - initializeUI(): void
+        - initializeUI()
         - createFirstCardPanel(): JPanel
         - createSecondCardPanel(): JPanel
         - createSliderPanel(label: String, slider: JSlider): JPanel
@@ -110,13 +110,13 @@ package view
 
     class ObserverConcret implements model.Observeur
     {
-        + updateIndice(indice: Indice): void
+        + updateIndice(indice: Indice)
     }
 
     class GameWindow implements model.Observeur
     {
         + GameWindow(p: Partie)
-        + updateIndice(indice: Indice): void
+        + updateIndice(indice: Indice)
     }
 
     class EndWindow
@@ -125,8 +125,8 @@ package view
     }
 }
 
-model.Partie --> "1..*" model.Manche : contient
-model.Manche *-- "1..*" model.Couleur : compose
+model.Partie --> "1..5" model.Manche : contient
+model.Manche *-- "1..*" model.Couleur : - combinaison*
 model.Manche --> model.Indice : utilise
 model.Manche --> view.ObserverConcret : notifie
 view.StartWindow --> model.Partie : utilise
