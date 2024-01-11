@@ -14,7 +14,7 @@ public class Partie {
     public int nbpions_combi;
     public int nb_tentative;
     private Color[] couleur_possible;
-    IndiceStrategy context;
+    AfficheIndiceStrategy context;
     private final List<ButtonObserveur> observers = new ArrayList<ButtonObserveur>();
     ObserveurConcretButton ob = new ObserveurConcretButton();
     public Partie()
@@ -22,7 +22,6 @@ public class Partie {
         this.color = Color.LIGHT_GRAY;
         this.observers.add(ob);
     }
-
     /*public void play()
     {
         Manche m1 = new Manche(this.nbpions_combi,this.nb_tentative,this.couleur_possible);
@@ -37,7 +36,7 @@ public class Partie {
         m1.affiche_indice();
     }
      */
-    public void change_strategy(IndiceStrategy c)
+    public void change_strategy(AfficheIndiceStrategy c)
     {
         this.context = c;
         System.out.println("Stratégie changée ! ");

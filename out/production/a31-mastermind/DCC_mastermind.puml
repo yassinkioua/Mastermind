@@ -22,21 +22,12 @@ package model
         - nb_tentative: int
 
         + Partie()
-<<<<<<< HEAD
         + play()
         + setCouleurPossible(): Couleur[]
         + setManche(m: int)
         + setNbpions(nbp: int)
         + setNbpions_combi(nbc: int)
         + setNb_tentative(t: int)
-=======
-        + play(): void
-        + setCouleurPossible(): Couleur[]
-        + setManche(m: int): void
-        + setNbpions(nbp: int): void
-        + setNbpions_combi(nbc: int): void
-        + setNb_tentative(t: int): void
->>>>>>> main
     }
 
     class Manche
@@ -49,7 +40,6 @@ package model
         - possibilite: Couleur[]
 
         + Manche(nbpions_combi: int, nb_tentative: int, possible: Couleur[])
-<<<<<<< HEAD
         + setCombiSecrete()
         + affiche_combi()
         + affiche_combisecrete()
@@ -58,21 +48,6 @@ package model
         + affiche_indice()
     }
 
-    enum Couleur
-    {
-        NONE, RED, ORANGE, YELLOW, PURPLE, BLUE, GREEN, BLACK, WHITE
-    }
-
-=======
-        + setCombiSecrete(): void
-        + affiche_combi(): void
-        + affiche_combisecrete(): void
-        + Change_Color(changement: Couleur[]): void
-        + Cree_Indice(): void
-        + affiche_indice(): void
-    }
-
->>>>>>> main
     enum Indice
     {
         BONNE_PLACE, MAUVAISE_PLACE, INCORRECT
@@ -100,11 +75,7 @@ package model
 
     interface Observeur <<interface>>
     {
-<<<<<<< HEAD
         +updateIndice(Indice indice)
-=======
-        void updateIndice(Indice indice)
->>>>>>> main
     }
 
 }
@@ -125,11 +96,7 @@ package view
         - startGameButton: JButton
 
         + StartWindow()
-<<<<<<< HEAD
         - initializeUI()
-=======
-        - initializeUI(): void
->>>>>>> main
         - createFirstCardPanel(): JPanel
         - createSecondCardPanel(): JPanel
         - createSliderPanel(label: String, slider: JSlider): JPanel
@@ -138,21 +105,13 @@ package view
 
     class ObserverConcret implements model.Observeur
     {
-<<<<<<< HEAD
         + updateIndice(indice: Indice)
-=======
-        + updateIndice(indice: Indice): void
->>>>>>> main
     }
 
     class GameWindow implements model.Observeur
     {
         + GameWindow(p: Partie)
-<<<<<<< HEAD
         + updateIndice(indice: Indice)
-=======
-        + updateIndice(indice: Indice): void
->>>>>>> main
     }
 
     class EndWindow
@@ -161,13 +120,7 @@ package view
     }
 }
 
-<<<<<<< HEAD
-model.Partie --> "1..5" model.Manche : contient
-model.Manche *-- "1..*" model.Couleur : - combinaison*
-=======
-model.Partie --> "1..*" model.Manche : contient
-model.Manche *-- "1..*" model.Color : compose
->>>>>>> main
+
 model.Manche --> model.Indice : utilise
 model.Manche --> view.ObserverConcret : notifie
 view.StartWindow --> model.Partie : utilise

@@ -2,6 +2,9 @@ package model;
 
 import java.awt.Color;
 import java.util.Random;
+import utils.ColorSwap;
+
+import static utils.ColorSwap.getColorName;
 
 public class Manche {
     private Color[] combinaison_secrete;
@@ -35,12 +38,12 @@ public class Manche {
 
     public void affiche_combi() {
         for (int i = 0; i < this.taille_combi; i++)
-            System.out.println("Élément " + i + " : " + this.combinaison_actuelle[i]);
+            System.out.println("Élément " + i + " : " + getColorName(this.combinaison_actuelle[i]));
     }
 
     public void affiche_combisecrete() {
         for (int i = 0; i < this.taille_combi; i++)
-            System.out.println("Élément " + i + " : " + this.combinaison_secrete[i]);
+            System.out.println("Élément " + i + " : " + getColorName(this.combinaison_secrete[i]));
     }
 
     public void changeColor(Color[] changement) {

@@ -1,7 +1,6 @@
 package utils;
 
 import java.awt.Color;
-
 public class ColorSwap {
 
     public static String getColorName(Color color)
@@ -22,6 +21,8 @@ public class ColorSwap {
             return "NOIR";
         else if (color.equals(Color.WHITE))
             return "BLANC";
+        else if (color.equals(Color.lightGray))
+            return "PAS RENSEIGNÉE";
         else
             return color.toString();
     }

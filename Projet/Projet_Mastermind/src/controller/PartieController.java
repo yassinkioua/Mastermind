@@ -1,7 +1,7 @@
 package controller;
 
 
-import model.IndiceStrategy;
+import model.AfficheIndiceStrategy;
 import model.Manche;
 import model.Partie;
 import view.GameWindow;
@@ -17,26 +17,27 @@ public class PartieController
     private GameWindow mainWindows;
     public PartieController()
     {
-        partie = new Partie();
-        mainWindows = new GameWindow(this);
-        partie.addObserveurs(mainWindows);
-        mancheController = new MancheController();
+        this.partie = new Partie();
+        this.mainWindows = new GameWindow(this);
+        this.partie.addObserveurs(this.mainWindows);
+        this.mancheController = new MancheController();
     }
-    public void getStrategy(IndiceStrategy modestrategy) { partie.change_strategy(modestrategy);}
-    public void addCurentPions(int nbPions){ partie.setNbpions(nbPions);}
-    public void addCurrentTentative(int nbTentative){ partie.setNbTentatives(nbTentative);}
-    public void addCurentPionsCombi(int nbPionsCombi){ partie.setNbpions_combi(nbPionsCombi);}
-    public void addCurentManche(int m) { partie.setNbManches(m);}
-    public void addCouleurPossible() { partie.setCouleurPossible();}
-    public void affichage() { partie.Affichage();}
-    public void getNextColor(JButton button, int currentColorIndex, int buttonIndex) {partie.NextColor(button, currentColorIndex, buttonIndex);}
-    public int getNbTentative() { return partie.nb_tentative;}
+    public void getStrategy(AfficheIndiceStrategy modestrategy) { this.partie.change_strategy(modestrategy);}
+    public void addCurentPions(int nbPions){ this.partie.setNbpions(nbPions);}
+    public void addCurrentTentative(int nbTentative){ this.partie.setNbTentatives(nbTentative);}
+    public void addCurentPionsCombi(int nbPionsCombi){ this.partie.setNbpions_combi(nbPionsCombi);}
+    public void addCurentManche(int m) { this.partie.setNbManches(m);}
+    public void addCouleurPossible() { this.partie.setCouleurPossible();}
+    public void affichage() { this.partie.Affichage();}
+    public void getNextColor(JButton button, int currentColorIndex, int buttonIndex) {this.partie.NextColor(button, currentColorIndex, buttonIndex);}
+    public int getNbTentative() { return this.partie.nb_tentative;}
+    public int getNbPionsCombi() {return this.partie.nbpions_combi; }
     public void initializeManche() {
-        mancheController.initializeManche(partie.getNbpions_combi(), partie.getNbTentatives(), partie.getCouleurPossible());
+        this.mancheController.initializeManche(this.partie.getNbpions_combi(), this.partie.getNbTentatives(), this.partie.getCouleurPossible());
     }
     public void testCombinaison(Color[] validate)
     {
-        mancheController.check_color(validate);
+        this.mancheController.check_color(validate);
     }
-    public boolean hasWon() { return mancheController.hasWon(); }
+    public boolean hasWon() { return this.mancheController.hasWon(); }
 }

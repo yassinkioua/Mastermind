@@ -12,35 +12,42 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static utils.ColorSwap.getColorName;
+
 public class GameWindow extends JFrame implements ButtonObserveur {
     private final PartieController controller;
-    private int currentLineHeight = 0;
-    private int initLineCount = 0;
+    private int LigneActuelle = 0;
     private JPanel mainPanel;
-    private final JButton[] buttons = new JButton[4];
+    private ArrayList<JButton> buttons;
+    private ArrayList<JPanel> lignePanels; // Nouvelle variable pour stocker les références aux lignes
+    private ArrayList<ArrayList<JButton>> ligneButtons; // Nouvelle variable pour stocker les références aux boutons dans chaque ligne
 
     public GameWindow(PartieController pc) {
         this.controller = pc;
+        buttons = new ArrayList<>(controller.getNbPionsCombi());
         initializeUI();
     }
 
     private void initializeUI() {
         setTitle("Fenêtre de jeu");
-        if (controller.getNbTentative() == 10)
+        if (this.controller.getNbTentative() == 10)
             setSize(600, 750);
-        else if (controller.getNbTentative() == 11)
+        else if (this.controller.getNbTentative() == 11)
             setSize(600, 790);
-        else if (controller.getNbTentative() == 12)
+        else if (this.controller.getNbTentative() == 12)
             setSize(600, 840);
         setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
+        this.lignePanels = new ArrayList<>();
+        this.ligneButtons = new ArrayList<>();
+
         this.mainPanel = new JPanel(new BorderLayout());
         this.mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-
-        initLine();
         JPanel bottomButtonPanel = new JPanel(new GridLayout(4, 1, 0, 10));
+
+        CreateLine();
 
         JButton validateButton = new JButton("Valider");
         JButton resetButton = new JButton("Réinitialiser");
@@ -50,13 +57,20 @@ public class GameWindow extends JFrame implements ButtonObserveur {
         validateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Color[] validate = getValidationTableau();
+                Color[] validate = getValidationTableau(ligneButtons.get(LigneActuelle));
                 controller.testCombinaison(validate);
-                if (!controller.hasWon() && controller.getNbTentative() > initLineCount) {
-                    currentLineHeight += 50;
-                    initLine();
-                    mainPanel.revalidate();
-                    mainPanel.repaint();
+                if (!controller.hasWon() && LigneActuelle < controller.getNbTentative() - 1) {
+
+                    // Rend la prochaine ligne visible
+                    lignePanels.get(LigneActuelle + 1).setVisible(true);
+
+                    // Bloque les boutons des lignes précédentes
+                    for (int i = 0; i <= LigneActuelle; i++) {
+                        for (JButton button : ligneButtons.get(i)) {
+                            button.setEnabled(false);
+                        }
+                    }
+                    LigneActuelle++;
                 }
             }
         });
@@ -74,15 +88,13 @@ public class GameWindow extends JFrame implements ButtonObserveur {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.initializeManche();
-                currentLineHeight = 0;
-                initLineCount = 0;
+                LigneActuelle = 0;
                 mainPanel.removeAll();
                 initializeUI();
                 mainPanel.revalidate();
                 mainPanel.repaint();
             }
         });
-
 
         changeDisplayModeButton.addActionListener(new ActionListener() {
             @Override
@@ -97,41 +109,55 @@ public class GameWindow extends JFrame implements ButtonObserveur {
         bottomButtonPanel.add(changeDisplayModeButton);
 
         this.mainPanel.add(bottomButtonPanel, BorderLayout.SOUTH);
-
         getContentPane().add(this.mainPanel);
     }
 
-    private void initLine()
-    {
-        if (initLineCount !=0)
-            for (JButton button : buttons)
-                button.setEnabled(false);
-        JPanel buttonPanel = new JPanel(new GridLayout(1, 5, 10, 0));
+    private void CreateLine() {
+        int nbPionsCombi = this.controller.getNbPionsCombi();
+        int nbTentative = this.controller.getNbTentative();
 
-        buttons[0] = createColorButton(1);
-        buttons[1] = createColorButton(2);
-        buttons[2] = createColorButton(3);
-        buttons[3] = createColorButton(4);
+        JPanel PanelJeu = new JPanel(new GridLayout(nbTentative,1, 10, 10));
 
-        JPanel test = new JPanel(new GridLayout(1, 4, 0, 0));
-        JButton[] indice = createIndiceButtons();
-        for (JButton button : indice)
-            test.add(button);
-        buttonPanel.add(buttons[0]);
-        buttonPanel.add(buttons[1]);
-        buttonPanel.add(buttons[2]);
-        buttonPanel.add(buttons[3]);
-        buttonPanel.add(test);
+        for (int i = 0; i < nbTentative; i++)
+        {
+            JPanel buttonPanel = new JPanel(new GridLayout(1, nbPionsCombi + 1, 10, 10));
 
 
-        for (JButton button : buttons)
-            button.setPreferredSize(new Dimension(50, 40));
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(currentLineHeight, 0, 0, 0));
+            for (int j = 1; j <= nbPionsCombi; j++) {
+                JButton button = createColorButton(j);
+                this.buttons.add(button);
+                buttonPanel.add(button);
+            }
 
-        this.mainPanel.add(buttonPanel, BorderLayout.NORTH);
-        initLineCount+=1;
+
+            JPanel test = new JPanel(new GridLayout(1, nbPionsCombi, 0, 0));
+            JButton[] indice = createIndiceButtons();
+            for (JButton button : indice)
+                test.add(button);
+            buttonPanel.add(test);
+
+            for (JButton button : this.buttons) {
+                button.setPreferredSize(new Dimension(50, 40));
+            }
+            buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+
+            this.lignePanels.add(buttonPanel); // Ajoute la référence du JPanel à la liste
+            this.ligneButtons.add(new ArrayList<>(this.buttons)); // Ajoute la référence des boutons à la liste
+
+            PanelJeu.add(buttonPanel);
+            if (i == 0)
+            {
+                buttonPanel.setVisible(true);
+            }
+            else
+            {
+                buttonPanel.setVisible(false);
+            }
+        }
+        this.mainPanel.add(PanelJeu, BorderLayout.NORTH);
+        this.mainPanel.revalidate();
+        this.mainPanel.repaint();
     }
-
 
     private JButton createColorButton(int buttonIndex) {
         JButton button = new JButton();
@@ -152,9 +178,9 @@ public class GameWindow extends JFrame implements ButtonObserveur {
         return button;
     }
     private JButton[] createIndiceButtons() {
-        JButton[] buttons = new JButton[4];
+        JButton[] buttons = new JButton[this.controller.getNbPionsCombi()];
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < this.controller.getNbPionsCombi(); i++) {
             JButton button = new JButton();
             button.setBackground(Color.WHITE);
             button.setEnabled(false);
@@ -169,10 +195,14 @@ public class GameWindow extends JFrame implements ButtonObserveur {
         button.repaint();
     }
 
-    public Color[] getValidationTableau() {
-        Color[] tableau = new Color[4];
-        for (int i = 0; i < 4; i++)
-            tableau[i] = buttons[i].getBackground();
+    public Color[] getValidationTableau(ArrayList<JButton> ligneButtons) {
+
+        System.out.println(ligneButtons.size());
+        Color[] tableau = new Color[controller.getNbPionsCombi()];
+        for (int i = 0; i < controller.getNbPionsCombi(); i++) {
+            tableau[i] = ligneButtons.get(i + controller.getNbPionsCombi() * LigneActuelle).getBackground();
+            System.out.println("Tableau de i : " + getColorName(tableau[i]));
+        }
         return tableau;
     }
 }
