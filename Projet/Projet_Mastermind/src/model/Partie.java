@@ -14,7 +14,7 @@ public class Partie {
     public int nbpions_combi;
     public int nb_tentative;
     private Color[] couleur_possible;
-    AfficheIndiceStrategy context;
+    AfficheIndiceStrategy context = new AffichageClassique();
     private final List<ButtonObserveur> observers = new ArrayList<ButtonObserveur>();
     ObserveurConcretButton ob = new ObserveurConcretButton();
     public Partie()
@@ -82,6 +82,7 @@ public class Partie {
     public int getNbpions_combi() { return this.nbpions_combi;}
     public int getNbTentatives() { return this.nb_tentative;}
     public Color[] getCouleurPossible() { return this.couleur_possible;}
+    public AfficheIndiceStrategy getStrategy() {return this.context;}
 
     public void Affichage()
     {

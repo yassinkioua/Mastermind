@@ -2,12 +2,14 @@ package controller;
 
 
 import model.AfficheIndiceStrategy;
+import model.Indice;
 import model.Manche;
 import model.Partie;
 import view.GameWindow;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 
 public class PartieController
@@ -33,11 +35,13 @@ public class PartieController
     public int getNbTentative() { return this.partie.nb_tentative;}
     public int getNbPionsCombi() {return this.partie.nbpions_combi; }
     public void initializeManche() {
-        this.mancheController.initializeManche(this.partie.getNbpions_combi(), this.partie.getNbTentatives(), this.partie.getCouleurPossible());
+        this.mancheController.initializeManche(this.partie.getNbpions_combi(), this.partie.getNbTentatives(), this.partie.getCouleurPossible(), this.partie.getStrategy());
     }
     public void testCombinaison(Color[] validate)
     {
         this.mancheController.check_color(validate);
     }
     public boolean hasWon() { return this.mancheController.hasWon(); }
+    public ArrayList<String> getAfficheIndice() {return this.mancheController.getAfficheIndice();}
+
 }

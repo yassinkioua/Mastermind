@@ -1,26 +1,25 @@
 package model;
 
+import java.util.ArrayList;
+
 public class AffichageClassique implements AfficheIndiceStrategy {
     @Override
-    public void afficherIndice(Indice[] indices)
+    public ArrayList<String> afficherIndice(Indice[] indices)
     {
         int blanc = NbBlanc(indices);
         int noir = NbNoir(indices);
-        Indice[] res = new Indice[indices.length];
+        ArrayList<String> res = new ArrayList<String>(indices.length);
         for (int i = 0; i < indices.length; i++)
         {
             if (i < noir) {
-                res[i] = Indice.BONNE_PLACE;
+                res.add("noir");
             } else if (i < noir + blanc) {
-                res[i] = Indice.MAUVAISE_PLACE;
+                res.add("blanc");
             } else {
-                res[i] = Indice.INCORRECT;
+                res.add("gris");
             }
         }
-        for (int j = 0; j < res.length; j++)
-        {
-            System.out.println("Élément " + j + " : " + res[j]);
-        }
+        return res;
     }
     public int NbBlanc(Indice[] indices)
     {

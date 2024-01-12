@@ -59,8 +59,7 @@ public class GameWindow extends JFrame implements ButtonObserveur {
             public void actionPerformed(ActionEvent e) {
                 Color[] validate = getValidationTableau(ligneButtons.get(LigneActuelle));
                 controller.testCombinaison(validate);
-                if (!controller.hasWon() && LigneActuelle < controller.getNbTentative() - 1) {
-
+                if (!controller.hasWon() && LigneActuelle < controller.getNbTentative() -1) {
                     // Rend la prochaine ligne visible
                     lignePanels.get(LigneActuelle + 1).setVisible(true);
 
@@ -77,10 +76,11 @@ public class GameWindow extends JFrame implements ButtonObserveur {
 
         resetButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                for (JButton button : buttons)
-                    updateButtons(button, Color.LIGHT_GRAY);
+            public void actionPerformed(ActionEvent e) {
+                for (int i = 0; i < controller.getNbPionsCombi(); i++) {
+                    int line = controller.getNbPionsCombi() * LigneActuelle;
+                    updateButtons(ligneButtons.get(LigneActuelle).get(i + line), Color.LIGHT_GRAY);
+                }
             }
         });
 
@@ -130,11 +130,11 @@ public class GameWindow extends JFrame implements ButtonObserveur {
             }
 
 
-            JPanel test = new JPanel(new GridLayout(1, nbPionsCombi, 0, 0));
+            JPanel IndicePanel = new JPanel(new GridLayout(1, nbPionsCombi, 2, 0));
             JButton[] indice = createIndiceButtons();
             for (JButton button : indice)
-                test.add(button);
-            buttonPanel.add(test);
+                IndicePanel.add(button);
+            buttonPanel.add(IndicePanel);
 
             for (JButton button : this.buttons) {
                 button.setPreferredSize(new Dimension(50, 40));
@@ -196,12 +196,9 @@ public class GameWindow extends JFrame implements ButtonObserveur {
     }
 
     public Color[] getValidationTableau(ArrayList<JButton> ligneButtons) {
-
-        System.out.println(ligneButtons.size());
         Color[] tableau = new Color[controller.getNbPionsCombi()];
         for (int i = 0; i < controller.getNbPionsCombi(); i++) {
             tableau[i] = ligneButtons.get(i + controller.getNbPionsCombi() * LigneActuelle).getBackground();
-            System.out.println("Tableau de i : " + getColorName(tableau[i]));
         }
         return tableau;
     }

@@ -1,5 +1,7 @@
 package model;
 
+import java.util.ArrayList;
+
 public interface AfficheIndiceStrategy {
-    public void afficherIndice(Indice[] indices);
+    public ArrayList<String> afficherIndice(Indice[] indices);
 }

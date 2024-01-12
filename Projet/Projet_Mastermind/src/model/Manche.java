@@ -1,8 +1,8 @@
 package model;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.Random;
-import utils.ColorSwap;
 
 import static utils.ColorSwap.getColorName;
 
@@ -13,8 +13,9 @@ public class Manche {
     private int taille_combi;
     private int nbtentative;
     private Color[] possibilite;
+    private AfficheIndiceStrategy context;
 
-    public Manche(int nbpions_combi, int nb_tentative, Color[] possible) {
+    public Manche(int nbpions_combi, int nb_tentative, Color[] possible, AfficheIndiceStrategy strategy) {
         this.combinaison_secrete = new Color[nbpions_combi];
         this.combinaison_actuelle = new Color[nbpions_combi];
         this.indices = new Indice[nbpions_combi];
@@ -26,6 +27,7 @@ public class Manche {
 
         for (int k = 0; k < this.combinaison_secrete.length; k++)
             this.indices[k] = Indice.INCORRECT;
+        this.context = strategy;
     }
 
     public void setCombiSecrete() {
@@ -36,9 +38,8 @@ public class Manche {
         }
     }
 
-    public void affiche_combi() {
-        for (int i = 0; i < this.taille_combi; i++)
-            System.out.println("Élément " + i + " : " + getColorName(this.combinaison_actuelle[i]));
+    public ArrayList<String> getAfficheIndice() {
+        return this.context.afficherIndice(indices);
     }
 
     public void affiche_combisecrete() {
