@@ -32,6 +32,11 @@ public class MancheController {
 
     public ArrayList<String> getAfficheIndice() {return this.manche.getAfficheIndice();}
 
+    public void changeStrat(AfficheIndiceStrategy mode)
+    {
+        this.manche.changeStrat(mode);
+    }
+
 
 
 }

@@ -1,45 +1,44 @@
 package view;
 
-import controller.MancheController;
 import controller.PartieController;
-import model.ButtonObserveur;
-import model.Manche;
+import model.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Objects;
 
-import static utils.ColorSwap.getColorName;
 
 public class GameWindow extends JFrame implements ButtonObserveur {
     private final PartieController controller;
     private int LigneActuelle = 0;
     private JPanel mainPanel;
     private ArrayList<JButton> buttons;
+    private ArrayList<JButton> ListeIndice;
     private ArrayList<JPanel> lignePanels; // Nouvelle variable pour stocker les références aux lignes
     private ArrayList<ArrayList<JButton>> ligneButtons; // Nouvelle variable pour stocker les références aux boutons dans chaque ligne
+
 
     public GameWindow(PartieController pc) {
         this.controller = pc;
         buttons = new ArrayList<>(controller.getNbPionsCombi());
+        ListeIndice = new ArrayList<>(controller.getNbPionsCombi());
         initializeUI();
     }
 
     private void initializeUI() {
         setTitle("Fenêtre de jeu");
         if (this.controller.getNbTentative() == 10)
-            setSize(600, 750);
+            setSize(1050, 750);
         else if (this.controller.getNbTentative() == 11)
-            setSize(600, 790);
+            setSize(1050, 790);
         else if (this.controller.getNbTentative() == 12)
-            setSize(600, 840);
+            setSize(1050, 840);
         setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-
         this.lignePanels = new ArrayList<>();
         this.ligneButtons = new ArrayList<>();
 
@@ -69,6 +68,7 @@ public class GameWindow extends JFrame implements ButtonObserveur {
                             button.setEnabled(false);
                         }
                     }
+                    updateIndiceButtons(controller.getAfficheIndice());
                     LigneActuelle++;
                 }
             }
@@ -87,19 +87,31 @@ public class GameWindow extends JFrame implements ButtonObserveur {
         nextRoundButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                controller.initializeManche();
-                LigneActuelle = 0;
-                mainPanel.removeAll();
-                initializeUI();
-                mainPanel.revalidate();
-                mainPanel.repaint();
+                if(controller.getManche() < controller.getNbManche())
+                {
+                    controller.addManche();
+                    GameWindow gameWindow = new GameWindow(controller);
+                    gameWindow.setVisible(true);
+                    dispose();
+                }
             }
         });
 
         changeDisplayModeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                if (controller.getStrategy() instanceof AffichageClassique)
+                {
+                    controller.changeStrategy(new AffichageFacile());
+                }
+                else if(controller.getStrategy() instanceof AffichageFacile)
+                {
+                    controller.changeStrategy(new AffichageNumerique());
+                }
+                else
+                {
+                    controller.changeStrategy(new AffichageClassique());
+                }
             }
         });
 
@@ -110,6 +122,8 @@ public class GameWindow extends JFrame implements ButtonObserveur {
 
         this.mainPanel.add(bottomButtonPanel, BorderLayout.SOUTH);
         getContentPane().add(this.mainPanel);
+
+        System.out.println("Manche : " + this.controller.getManche());
     }
 
     private void CreateLine() {
@@ -133,7 +147,10 @@ public class GameWindow extends JFrame implements ButtonObserveur {
             JPanel IndicePanel = new JPanel(new GridLayout(1, nbPionsCombi, 2, 0));
             JButton[] indice = createIndiceButtons();
             for (JButton button : indice)
+            {
                 IndicePanel.add(button);
+                this.ListeIndice.add(button);
+            }
             buttonPanel.add(IndicePanel);
 
             for (JButton button : this.buttons) {
@@ -182,8 +199,12 @@ public class GameWindow extends JFrame implements ButtonObserveur {
 
         for (int i = 0; i < this.controller.getNbPionsCombi(); i++) {
             JButton button = new JButton();
+            button.setPreferredSize(new Dimension(30, 30));
             button.setBackground(Color.WHITE);
             button.setEnabled(false);
+            button.setLayout(new GridBagLayout());
+            button.setHorizontalAlignment(SwingConstants.CENTER);
+            button.setVerticalAlignment(SwingConstants.CENTER);
             buttons[i] = button;
         }
 
@@ -195,10 +216,29 @@ public class GameWindow extends JFrame implements ButtonObserveur {
         button.repaint();
     }
 
+    public void updateIndiceButtons(ArrayList<String> indices) {
+        for (int i = 0; i < this.controller.getNbPionsCombi(); i++) {
+            String indice = indices.get(i);
+            System.out.println(indice);
+            if (!(this.controller.getStrategy() instanceof AffichageNumerique)) {
+                if (Objects.equals(indice, "noir")) {
+                    this.ListeIndice.get(i + this.controller.getNbPionsCombi() * this.LigneActuelle).setBackground(Color.BLACK);
+                } else if (Objects.equals(indice, "blanc")) {
+                    this.ListeIndice.get(i + this.controller.getNbPionsCombi() * this.LigneActuelle).setBackground(Color.WHITE);
+                } else if (Objects.equals(indice, "gris")) {
+                    this.ListeIndice.get(i + this.controller.getNbPionsCombi() * this.LigneActuelle).setBackground(Color.GRAY);
+                }
+            }
+            else {
+                this.ListeIndice.get(i + this.controller.getNbPionsCombi() * this.LigneActuelle).setText(indices.get(i));
+                }
+            }
+    }
+
     public Color[] getValidationTableau(ArrayList<JButton> ligneButtons) {
-        Color[] tableau = new Color[controller.getNbPionsCombi()];
-        for (int i = 0; i < controller.getNbPionsCombi(); i++) {
-            tableau[i] = ligneButtons.get(i + controller.getNbPionsCombi() * LigneActuelle).getBackground();
+        Color[] tableau = new Color[this.controller.getNbPionsCombi()];
+        for (int i = 0; i < this.controller.getNbPionsCombi(); i++) {
+            tableau[i] = ligneButtons.get(i + this.controller.getNbPionsCombi() * this.LigneActuelle).getBackground();
         }
         return tableau;
     }

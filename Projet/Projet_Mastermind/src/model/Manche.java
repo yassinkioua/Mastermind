@@ -7,7 +7,7 @@ import java.util.Random;
 import static utils.ColorSwap.getColorName;
 
 public class Manche {
-    private Color[] combinaison_secrete;
+    private final Color[] combinaison_secrete;
     private Color[] combinaison_actuelle;
     private Indice[] indices;
     private int taille_combi;
@@ -85,5 +85,10 @@ public class Manche {
     public void afficheIndice() {
         for (int i = 0; i < this.indices.length; i++)
             System.out.println("Élément " + i + " : " + this.indices[i]);
+    }
+
+    public void changeStrat(AfficheIndiceStrategy mode)
+    {
+        this.context = mode;
     }
 }

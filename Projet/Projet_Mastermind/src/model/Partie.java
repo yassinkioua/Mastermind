@@ -10,11 +10,12 @@ import java.util.List;
 public class Partie {
     private int manche;
     public int nbpions;
+    private int mancheActuelle = 1;
     public Color color;
-    public int nbpions_combi;
+    private int nbpions_combi;
     public int nb_tentative;
     private Color[] couleur_possible;
-    AfficheIndiceStrategy context = new AffichageClassique();
+    private AfficheIndiceStrategy context = new AffichageClassique();
     private final List<ButtonObserveur> observers = new ArrayList<ButtonObserveur>();
     ObserveurConcretButton ob = new ObserveurConcretButton();
     public Partie()
@@ -22,20 +23,7 @@ public class Partie {
         this.color = Color.LIGHT_GRAY;
         this.observers.add(ob);
     }
-    /*public void play()
-    {
-        Manche m1 = new Manche(this.nbpions_combi,this.nb_tentative,this.couleur_possible);
-        m1.setCombiSecrete();
-        Color[] c = {Color.ORANGE,Color.GREEN,Color.WHITE,Color.YELLOW,Color.RED,Color.BLUE};
-        m1.Change_Color(c);
-        m1.Cree_Indice();
-        m1.affiche_combi();
-        System.out.println("-----------------------------------------------------");
-        m1.affiche_combisecrete();
-        System.out.println("-----------------------------------------------------");
-        m1.affiche_indice();
-    }
-     */
+
     public void change_strategy(AfficheIndiceStrategy c)
     {
         this.context = c;
@@ -81,9 +69,11 @@ public class Partie {
     }
     public int getNbpions_combi() { return this.nbpions_combi;}
     public int getNbTentatives() { return this.nb_tentative;}
+    public int getNbManche() {return this.manche;}
     public Color[] getCouleurPossible() { return this.couleur_possible;}
     public AfficheIndiceStrategy getStrategy() {return this.context;}
-
+    public int getMancheActuelle() {return this.mancheActuelle;}
+    public void addManche() {this.mancheActuelle++;}
     public void Affichage()
     {
         System.out.println("------------------- MASTERMIND -----------------");
