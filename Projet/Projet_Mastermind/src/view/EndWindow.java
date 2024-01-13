@@ -70,6 +70,7 @@ public class EndWindow extends JFrame {
                     public void actionPerformed(ActionEvent e) {
                         controller.addManche();
                         GameWindow gameWindow = new GameWindow(controller);
+                        controller.initializeManche();
                         gameWindow.setVisible(true);
                         dispose();
                     }

@@ -46,7 +46,7 @@ public class GameWindow extends JFrame implements ButtonObserveur {
         System.out.println(controller.getNickName());
         this.mainPanel = new JPanel(new BorderLayout());
         this.mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        JPanel bottomButtonPanel = new JPanel(new GridLayout(5, 1, 0, 10));
+        JPanel bottomButtonPanel = new JPanel(new GridLayout(6, 1, 0, 10));
 
         CreateLine();
 
@@ -54,6 +54,7 @@ public class GameWindow extends JFrame implements ButtonObserveur {
         JButton resetButton = new JButton("Réinitialiser");
         JButton nextRoundButton = new JButton("Manche suivante");
         JButton changeDisplayModeButton = new JButton("Changer mode affichage");
+        JButton menu = new JButton("Retour au menu");
         JPanel statusPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         String welcome = "Bienvenue sur notre mastermind, bonne partie " + controller.getNickName() + " !                            ";
         String manche = "Nous sommes actuellement à la manche " + controller.getManche() + "/" + controller.getNbManche() + " !                            ";
@@ -76,7 +77,6 @@ public class GameWindow extends JFrame implements ButtonObserveur {
             public void actionPerformed(ActionEvent e) {
                 Color[] validate = getValidationTableau(ligneButtons.get(LigneActuelle));
                 controller.testCombinaison(validate);
-                System.out.println(LigneActuelle);
                 if (!controller.hasWon() && LigneActuelle < controller.getNbTentative() -1)
                 {
                     lignePanels.get(LigneActuelle + 1).setVisible(true);
@@ -101,6 +101,7 @@ public class GameWindow extends JFrame implements ButtonObserveur {
                     {
                         controller.addManche();
                         GameWindow gameWindow = new GameWindow(controller);
+                        controller.initializeManche();
                         gameWindow.setVisible(true);
                         dispose();
                     }
@@ -130,24 +131,37 @@ public class GameWindow extends JFrame implements ButtonObserveur {
                 EndWindow ed = new EndWindow(controller);
                 ed.setVisible(true);
                 dispose();
+
             }
         });
 
         changeDisplayModeButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e)
+            {
                 if (controller.getStrategy() instanceof AffichageClassique)
                 {
                     controller.changeStrategy(new AffichageFacile());
+                    changeDisplayModeButton.setText("Affichage facile");
                 }
                 else if(controller.getStrategy() instanceof AffichageFacile)
                 {
                     controller.changeStrategy(new AffichageNumerique());
+                    changeDisplayModeButton.setText("Affichage numérique");
                 }
                 else
                 {
                     controller.changeStrategy(new AffichageClassique());
+                    changeDisplayModeButton.setText("Affichage classique");
                 }
+            }
+        });
+        menu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                StartWindow st = new StartWindow();
+                st.setVisible(true);
+                dispose();
             }
         });
 
@@ -155,6 +169,7 @@ public class GameWindow extends JFrame implements ButtonObserveur {
         bottomButtonPanel.add(resetButton);
         bottomButtonPanel.add(nextRoundButton);
         bottomButtonPanel.add(changeDisplayModeButton);
+        bottomButtonPanel.add(menu);
         bottomButtonPanel.add(statusPanel);
         this.mainPanel.add(bottomButtonPanel, BorderLayout.SOUTH);
         getContentPane().add(this.mainPanel);
