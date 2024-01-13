@@ -91,4 +91,8 @@ public class Manche {
     {
         this.context = mode;
     }
+    public Color[] getCombinaisonSecrete()
+    {
+        return this.combinaison_secrete;
+    }
 }

@@ -16,8 +16,8 @@ public class GameWindow extends JFrame implements ButtonObserveur {
     private int LigneActuelle = 0;
     private JPanel mainPanel;
     private int countTenta = 0;
-    private ArrayList<JButton> buttons;
-    private ArrayList<JButton> ListeIndice;
+    private final ArrayList<JButton> buttons;
+    private final ArrayList<JButton> ListeIndice;
     private ArrayList<JPanel> lignePanels; // Nouvelle variable pour stocker les références aux lignes
     private ArrayList<ArrayList<JButton>> ligneButtons; // Nouvelle variable pour stocker les références aux boutons dans chaque ligne
 
@@ -33,12 +33,12 @@ public class GameWindow extends JFrame implements ButtonObserveur {
     private void initializeUI() {
         setTitle("Fenêtre de jeu");
         if (this.controller.getNbTentative() == 10)
-            setSize(1150, 750);
+            setSize(1150, 850);
         else if (this.controller.getNbTentative() == 11)
-            setSize(1150, 790);
+            setSize(1150, 890);
         else if (this.controller.getNbTentative() == 12)
-            setSize(1150, 840);
-        setResizable(true);
+            setSize(1150, 940);
+        setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.lignePanels = new ArrayList<>();
@@ -76,11 +76,10 @@ public class GameWindow extends JFrame implements ButtonObserveur {
             public void actionPerformed(ActionEvent e) {
                 Color[] validate = getValidationTableau(ligneButtons.get(LigneActuelle));
                 controller.testCombinaison(validate);
-                if (!controller.hasWon() && LigneActuelle < controller.getNbTentative() -1) {
-                    // Rend la prochaine ligne visible
+                System.out.println(LigneActuelle);
+                if (!controller.hasWon() && LigneActuelle < controller.getNbTentative() -1)
+                {
                     lignePanels.get(LigneActuelle + 1).setVisible(true);
-
-                    // Bloque les boutons des lignes précédentes
                     for (int i = 0; i <= LigneActuelle; i++) {
                         for (JButton button : ligneButtons.get(i)) {
                             button.setEnabled(false);
@@ -90,14 +89,25 @@ public class GameWindow extends JFrame implements ButtonObserveur {
                     LigneActuelle++;
                     countTenta--;
                 }
-                else
+                else if (LigneActuelle > controller.getNbTentative() - 2)
                 {
-                    controller.addScore(countTenta);
+                    EndWindow ed = new EndWindow(controller);
+                    ed.setVisible(true);
+                    dispose();
+                }
+                else if (controller.hasWon())
+                {   controller.addScore(countTenta);
                     if(controller.getManche() < controller.getNbManche())
                     {
                         controller.addManche();
                         GameWindow gameWindow = new GameWindow(controller);
                         gameWindow.setVisible(true);
+                        dispose();
+                    }
+                    else
+                    {
+                        EndWindow ed = new EndWindow(controller);
+                        ed.setVisible(true);
                         dispose();
                     }
                 }
@@ -117,13 +127,9 @@ public class GameWindow extends JFrame implements ButtonObserveur {
         nextRoundButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(controller.getManche() < controller.getNbManche())
-                {
-                    controller.addManche();
-                    GameWindow gameWindow = new GameWindow(controller);
-                    gameWindow.setVisible(true);
-                    dispose();
-                }
+                EndWindow ed = new EndWindow(controller);
+                ed.setVisible(true);
+                dispose();
             }
         });
 

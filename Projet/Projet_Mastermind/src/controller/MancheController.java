@@ -36,7 +36,7 @@ public class MancheController {
     {
         this.manche.changeStrat(mode);
     }
-
+    public Color[] getCombinaisonSecrete(){ return this.manche.getCombinaisonSecrete();}
 
 
 }

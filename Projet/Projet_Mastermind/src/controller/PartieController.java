@@ -52,5 +52,5 @@ public class PartieController
     public String getNickName() {return this.partie.getNickName();}
     public void addScore(int score) {this.partie.setScore(score);}
     public int getScore() { return this.partie.getScore();}
-
+    public Color[] getCombinaisonSecrete() { return this.mancheController.getCombinaisonSecrete();}
 }
