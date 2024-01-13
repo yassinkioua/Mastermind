@@ -15,6 +15,7 @@ public class GameWindow extends JFrame implements ButtonObserveur {
     private final PartieController controller;
     private int LigneActuelle = 0;
     private JPanel mainPanel;
+    private int countTenta = 0;
     private ArrayList<JButton> buttons;
     private ArrayList<JButton> ListeIndice;
     private ArrayList<JPanel> lignePanels; // Nouvelle variable pour stocker les références aux lignes
@@ -25,26 +26,27 @@ public class GameWindow extends JFrame implements ButtonObserveur {
         this.controller = pc;
         buttons = new ArrayList<>(controller.getNbPionsCombi());
         ListeIndice = new ArrayList<>(controller.getNbPionsCombi());
+        countTenta = controller.getNbTentative();
         initializeUI();
     }
 
     private void initializeUI() {
         setTitle("Fenêtre de jeu");
         if (this.controller.getNbTentative() == 10)
-            setSize(1050, 750);
+            setSize(1150, 750);
         else if (this.controller.getNbTentative() == 11)
-            setSize(1050, 790);
+            setSize(1150, 790);
         else if (this.controller.getNbTentative() == 12)
-            setSize(1050, 840);
-        setResizable(false);
+            setSize(1150, 840);
+        setResizable(true);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.lignePanels = new ArrayList<>();
         this.ligneButtons = new ArrayList<>();
-
+        System.out.println(controller.getNickName());
         this.mainPanel = new JPanel(new BorderLayout());
         this.mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        JPanel bottomButtonPanel = new JPanel(new GridLayout(4, 1, 0, 10));
+        JPanel bottomButtonPanel = new JPanel(new GridLayout(5, 1, 0, 10));
 
         CreateLine();
 
@@ -52,7 +54,23 @@ public class GameWindow extends JFrame implements ButtonObserveur {
         JButton resetButton = new JButton("Réinitialiser");
         JButton nextRoundButton = new JButton("Manche suivante");
         JButton changeDisplayModeButton = new JButton("Changer mode affichage");
-
+        JPanel statusPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        String welcome = "Bienvenue sur notre mastermind, bonne partie " + controller.getNickName() + " !                            ";
+        String manche = "Nous sommes actuellement à la manche " + controller.getManche() + "/" + controller.getNbManche() + " !                            ";
+        String score = "Votre score actuel est de " + controller.getScore() + "!                            ";
+        String final_print = welcome + manche + score;
+        JLabel scrollingLabel = new JLabel();
+        scrollingLabel.setText(final_print);
+        statusPanel.add(scrollingLabel);
+        Timer scrollTimer = new Timer(150, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String labelText = scrollingLabel.getText();
+                labelText = labelText.charAt(labelText.length() - 1) + labelText.substring(0, labelText.length() - 1);
+                scrollingLabel.setText(labelText);
+            }
+        });
+        scrollTimer.start();
         validateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -70,6 +88,18 @@ public class GameWindow extends JFrame implements ButtonObserveur {
                     }
                     updateIndiceButtons(controller.getAfficheIndice());
                     LigneActuelle++;
+                    countTenta--;
+                }
+                else
+                {
+                    controller.addScore(countTenta);
+                    if(controller.getManche() < controller.getNbManche())
+                    {
+                        controller.addManche();
+                        GameWindow gameWindow = new GameWindow(controller);
+                        gameWindow.setVisible(true);
+                        dispose();
+                    }
                 }
             }
         });
@@ -119,7 +149,7 @@ public class GameWindow extends JFrame implements ButtonObserveur {
         bottomButtonPanel.add(resetButton);
         bottomButtonPanel.add(nextRoundButton);
         bottomButtonPanel.add(changeDisplayModeButton);
-
+        bottomButtonPanel.add(statusPanel);
         this.mainPanel.add(bottomButtonPanel, BorderLayout.SOUTH);
         getContentPane().add(this.mainPanel);
 
@@ -178,7 +208,7 @@ public class GameWindow extends JFrame implements ButtonObserveur {
 
     private JButton createColorButton(int buttonIndex) {
         JButton button = new JButton();
-        button.setPreferredSize(new Dimension(50, 50));
+        button.setPreferredSize(new Dimension(70, 50));
         button.setBackground(Color.LIGHT_GRAY);
         button.putClientProperty("currentColorIndex", 0);
         button.putClientProperty("buttonIndex", buttonIndex);
@@ -197,19 +227,22 @@ public class GameWindow extends JFrame implements ButtonObserveur {
     private JButton[] createIndiceButtons() {
         JButton[] buttons = new JButton[this.controller.getNbPionsCombi()];
 
-        for (int i = 0; i < this.controller.getNbPionsCombi(); i++) {
+        for (int i = 0; i < this.controller.getNbPionsCombi(); i++)
+        {
             JButton button = new JButton();
-            button.setPreferredSize(new Dimension(30, 30));
+            button.setPreferredSize(new Dimension(50, 30));
             button.setBackground(Color.WHITE);
             button.setEnabled(false);
-            button.setLayout(new GridBagLayout());
-            button.setHorizontalAlignment(SwingConstants.CENTER);
-            button.setVerticalAlignment(SwingConstants.CENTER);
+            Font font = new Font("Arial", Font.PLAIN, 14);
+            button.setFont(font);
+            button.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
             buttons[i] = button;
+
         }
 
         return buttons;
     }
+
 
     public void updateButtons(JButton button, Color color) {
         button.setBackground(color);

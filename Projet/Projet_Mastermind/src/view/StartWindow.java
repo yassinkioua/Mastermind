@@ -12,6 +12,7 @@ public class StartWindow extends JFrame {
 
     private CardLayout cardLayout;
     private JPanel cardPanel;
+    private String pseudo;
 
     public StartWindow() {
         initializeUI();
@@ -56,7 +57,10 @@ public class StartWindow extends JFrame {
 
         nextButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e)
+            {
+                pseudo = playerNameTextField.getText();
+
                 cardLayout.show(cardPanel, "second");
             }
         });
@@ -92,6 +96,7 @@ public class StartWindow extends JFrame {
         startGameButton.addActionListener(ActionEvent ->
         {
             PartieController pc = new PartieController();
+            pc.addNickName(pseudo);
             pc.addCurentPions(roundsSlider.getValue());
             pc.addCurentManche(roundsPerMatchSlider.getValue());
             pc.addCurrentTentative(attemptsSlider.getValue());

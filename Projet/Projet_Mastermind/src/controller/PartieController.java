@@ -48,7 +48,9 @@ public class PartieController
     public AfficheIndiceStrategy getStrategy() {return this.partie.getStrategy();}
     public int getManche() {return this.partie.getMancheActuelle();}
     public void addManche() { this.partie.addManche();}
-
-
+    public void addNickName(String pseudo) {this.partie.setNickName(pseudo);}
+    public String getNickName() {return this.partie.getNickName();}
+    public void addScore(int score) {this.partie.setScore(score);}
+    public int getScore() { return this.partie.getScore();}
 
 }

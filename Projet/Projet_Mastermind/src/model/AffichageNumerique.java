@@ -13,6 +13,10 @@ public class AffichageNumerique implements AfficheIndiceStrategy {
         res.add(String.valueOf(noir));
         res.add("M");
         res.add(String.valueOf(blanc));
+        for (int i = 4; i<indices.length; i++)
+        {
+            res.add("");
+        }
         return res;
     }
 
