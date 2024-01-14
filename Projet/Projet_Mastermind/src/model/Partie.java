@@ -13,16 +13,14 @@ public class Partie {
     private int mancheActuelle = 1;
     private String name;
     private int score = 0;
-    public Color color;
     private int nbpions_combi;
     public int nb_tentative;
     private Color[] couleur_possible;
     private AfficheIndiceStrategy context = new AffichageClassique();
     private final List<ButtonObserveur> observers = new ArrayList<ButtonObserveur>();
-    ObserveurConcretButton ob = new ObserveurConcretButton();
+    private ObserveurConcretButton ob = new ObserveurConcretButton();
     public Partie()
     {
-        this.color = Color.LIGHT_GRAY;
         this.observers.add(ob);
     }
 

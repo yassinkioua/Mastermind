@@ -1,7 +1,6 @@
 package view;
 
 import controller.PartieController;
-import model.Partie;
 
 import javax.swing.*;
 import java.awt.*;
