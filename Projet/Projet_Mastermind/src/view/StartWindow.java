@@ -8,20 +8,25 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class StartWindow extends JFrame {
+public class StartWindow extends JFrame
+{
 
     private CardLayout cardLayout;
     private JPanel cardPanel;
+    private String pseudo;
 
     public StartWindow() {
         initializeUI();
     }
 
-    private void initializeUI() {
-        setTitle("Mastermind - Game Settings");
+    // Même base que GameWindow, méthode mère de l'initialisation du jeu
+    private void initializeUI()
+    {
+        setTitle("Mastermind - Initialisation");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 400);
         setLocationRelativeTo(null);
+        setResizable(false);
 
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
@@ -37,7 +42,9 @@ public class StartWindow extends JFrame {
         setVisible(true);
     }
 
-    private JPanel createFirstCardPanel() {
+    // Création du panel d'entrée (saisi du pseudo)
+    private JPanel createFirstCardPanel()
+    {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
@@ -54,16 +61,20 @@ public class StartWindow extends JFrame {
         pseudonymPanel.add(nextButton);
         panel.add(pseudonymPanel, BorderLayout.SOUTH);
 
-        nextButton.addActionListener(new ActionListener() {
+        nextButton.addActionListener(new ActionListener()
+        {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e)
+            {
+                pseudo = playerNameTextField.getText();
+
                 cardLayout.show(cardPanel, "second");
             }
         });
 
         return panel;
     }
-
+    // Création du panel d'option
     private JPanel createSecondCardPanel() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -92,6 +103,7 @@ public class StartWindow extends JFrame {
         startGameButton.addActionListener(ActionEvent ->
         {
             PartieController pc = new PartieController();
+            pc.addNickName(pseudo);
             pc.addCurentPions(roundsSlider.getValue());
             pc.addCurentManche(roundsPerMatchSlider.getValue());
             pc.addCurrentTentative(attemptsSlider.getValue());
@@ -105,7 +117,8 @@ public class StartWindow extends JFrame {
             dispose();
         });
 
-        backButton.addActionListener(new ActionListener() {
+        backButton.addActionListener(new ActionListener()
+        {
             @Override
             public void actionPerformed(ActionEvent e) {
                 cardLayout.show(cardPanel, "first");
@@ -115,7 +128,9 @@ public class StartWindow extends JFrame {
         return panel;
     }
 
-    private JPanel createSliderPanel(String label, JSlider slider) {
+    // Permet de générer un panel avec une barre (slider) pour choisir ce que l'on veut
+    private JPanel createSliderPanel(String label, JSlider slider)
+    {
         JPanel sliderPanel = new JPanel(new BorderLayout());
         JLabel labelComponent = new JLabel(label);
         labelComponent.setHorizontalAlignment(JLabel.RIGHT);
@@ -123,8 +138,9 @@ public class StartWindow extends JFrame {
         sliderPanel.add(slider, BorderLayout.CENTER);
         return sliderPanel;
     }
-
-    private JSlider createSlider(int min, int max, int initial) {
+    // Génère le slider en lui-même
+    private JSlider createSlider(int min, int max, int initial)
+    {
         JSlider slider = new JSlider(min, max, initial);
         slider.setMajorTickSpacing(1);
         slider.setPaintTicks(true);

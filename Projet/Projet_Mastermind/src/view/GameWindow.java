@@ -15,36 +15,41 @@ public class GameWindow extends JFrame implements ButtonObserveur {
     private final PartieController controller;
     private int LigneActuelle = 0;
     private JPanel mainPanel;
-    private ArrayList<JButton> buttons;
-    private ArrayList<JButton> ListeIndice;
-    private ArrayList<JPanel> lignePanels; // Nouvelle variable pour stocker les références aux lignes
-    private ArrayList<ArrayList<JButton>> ligneButtons; // Nouvelle variable pour stocker les références aux boutons dans chaque ligne
+    private int countTenta = 0;
+    private final ArrayList<JButton> buttons;
+    private final ArrayList<JButton> ListeIndice;
+    private ArrayList<JPanel> lignePanels;
+    private ArrayList<ArrayList<JButton>> ligneButtons;
 
 
-    public GameWindow(PartieController pc) {
+    public GameWindow(PartieController pc)
+    {
         this.controller = pc;
         buttons = new ArrayList<>(controller.getNbPionsCombi());
         ListeIndice = new ArrayList<>(controller.getNbPionsCombi());
+        countTenta = controller.getNbTentative();
         initializeUI();
     }
 
-    private void initializeUI() {
-        setTitle("Fenêtre de jeu");
+    // Permet d'initialiser une partie, méthode mère du jeu
+    private void initializeUI()
+    {
+        setTitle("Mastermind - Partie en cours - Manche " + controller.getManche());
         if (this.controller.getNbTentative() == 10)
-            setSize(1200, 750);
+            setSize(1150, 850);
         else if (this.controller.getNbTentative() == 11)
-            setSize(1200, 790);
+            setSize(1150, 890);
         else if (this.controller.getNbTentative() == 12)
-            setSize(1200, 840);
-        setResizable(true);
+            setSize(1150, 940);
+
+        setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.lignePanels = new ArrayList<>();
         this.ligneButtons = new ArrayList<>();
-
         this.mainPanel = new JPanel(new BorderLayout());
         this.mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        JPanel bottomButtonPanel = new JPanel(new GridLayout(4, 1, 0, 10));
+        JPanel bottomButtonPanel = new JPanel(new GridLayout(6, 1, 0, 10));
 
         CreateLine();
 
@@ -52,66 +57,126 @@ public class GameWindow extends JFrame implements ButtonObserveur {
         JButton resetButton = new JButton("Réinitialiser");
         JButton nextRoundButton = new JButton("Manche suivante");
         JButton changeDisplayModeButton = new JButton("Changer mode affichage");
-
-        validateButton.addActionListener(new ActionListener() {
+        JButton menu = new JButton("Retour au menu");
+        JPanel statusPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        String welcome = "Bienvenue sur notre mastermind, bonne partie " + controller.getNickName() + " !                            ";
+        String manche = "Nous sommes actuellement à la manche " + controller.getManche() + "/" + controller.getNbManche() + " !                            ";
+        String score = "Votre score actuel est de " + controller.getScore() + "!                            ";
+        String final_print = welcome + manche + score;
+        JLabel scrollingLabel = new JLabel();
+        scrollingLabel.setText(final_print);
+        statusPanel.add(scrollingLabel);
+        // Permet de faire le défilement vers la droite du texte en bas
+        Timer scrollTimer = new Timer(150, new ActionListener()
+        {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e)
+            {
+                String labelText = scrollingLabel.getText();
+                labelText = labelText.charAt(labelText.length() - 1) + labelText.substring(0, labelText.length() - 1);
+                scrollingLabel.setText(labelText);
+            }
+        });
+        scrollTimer.start();
+        validateButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
                 Color[] validate = getValidationTableau(ligneButtons.get(LigneActuelle));
                 controller.testCombinaison(validate);
-                if (!controller.hasWon() && LigneActuelle < controller.getNbTentative() -1) {
-                    // Rend la prochaine ligne visible
+                if (!controller.hasWon() && LigneActuelle < controller.getNbTentative() -1)
+                {
                     lignePanels.get(LigneActuelle + 1).setVisible(true);
-
-                    // Bloque les boutons des lignes précédentes
-                    for (int i = 0; i <= LigneActuelle; i++) {
-                        for (JButton button : ligneButtons.get(i)) {
+                    for (int i = 0; i <= LigneActuelle; i++)
+                        for (JButton button : ligneButtons.get(i))
                             button.setEnabled(false);
-                        }
-                    }
+
                     updateIndiceButtons(controller.getAfficheIndice());
                     LigneActuelle++;
+                    countTenta--;
+                }
+                else if (LigneActuelle > controller.getNbTentative() - 2)
+                {
+                    EndWindow ed = new EndWindow(controller);
+                    ed.setVisible(true);
+                    dispose();
+                }
+                else if (controller.hasWon())
+                {   controller.addScore(countTenta);
+                    if(controller.getManche() < controller.getNbManche())
+                    {
+                        controller.addManche();
+                        GameWindow gameWindow = new GameWindow(controller);
+                        controller.initializeManche();
+                        gameWindow.setVisible(true);
+                        dispose();
+                    }
+                    else
+                    {
+                        EndWindow ed = new EndWindow(controller);
+                        ed.setVisible(true);
+                        dispose();
+                    }
                 }
             }
         });
 
-        resetButton.addActionListener(new ActionListener() {
+        resetButton.addActionListener(new ActionListener()
+        {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                for (int i = 0; i < controller.getNbPionsCombi(); i++) {
+            public void actionPerformed(ActionEvent e)
+            {
+                for (int i = 0; i < controller.getNbPionsCombi(); i++)
+                {
                     int line = controller.getNbPionsCombi() * LigneActuelle;
                     updateButtons(ligneButtons.get(LigneActuelle).get(i + line), Color.LIGHT_GRAY);
                 }
             }
         });
 
-        nextRoundButton.addActionListener(new ActionListener() {
+        nextRoundButton.addActionListener(new ActionListener()
+        {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                if(controller.getManche() < controller.getNbManche())
-                {
-                    controller.addManche();
-                    GameWindow gameWindow = new GameWindow(controller);
-                    gameWindow.setVisible(true);
-                    dispose();
-                }
+            public void actionPerformed(ActionEvent e)
+            {
+                EndWindow ed = new EndWindow(controller);
+                ed.setVisible(true);
+                dispose();
+
             }
         });
 
-        changeDisplayModeButton.addActionListener(new ActionListener() {
+        changeDisplayModeButton.addActionListener(new ActionListener()
+        {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e)
+            {
                 if (controller.getStrategy() instanceof AffichageClassique)
                 {
                     controller.changeStrategy(new AffichageFacile());
+                    changeDisplayModeButton.setText("Affichage facile");
                 }
                 else if(controller.getStrategy() instanceof AffichageFacile)
                 {
                     controller.changeStrategy(new AffichageNumerique());
+                    changeDisplayModeButton.setText("Affichage numérique");
                 }
                 else
                 {
                     controller.changeStrategy(new AffichageClassique());
+                    changeDisplayModeButton.setText("Affichage classique");
                 }
+            }
+        });
+        menu.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                StartWindow st = new StartWindow();
+                st.setVisible(true);
+                dispose();
             }
         });
 
@@ -119,14 +184,15 @@ public class GameWindow extends JFrame implements ButtonObserveur {
         bottomButtonPanel.add(resetButton);
         bottomButtonPanel.add(nextRoundButton);
         bottomButtonPanel.add(changeDisplayModeButton);
-
+        bottomButtonPanel.add(menu);
+        bottomButtonPanel.add(statusPanel);
         this.mainPanel.add(bottomButtonPanel, BorderLayout.SOUTH);
         getContentPane().add(this.mainPanel);
-
-        System.out.println("Manche : " + this.controller.getManche());
     }
 
-    private void CreateLine() {
+    // Créer une ligne : boutons + indices
+    private void CreateLine()
+    {
         int nbPionsCombi = this.controller.getNbPionsCombi();
         int nbTentative = this.controller.getNbTentative();
 
@@ -137,7 +203,8 @@ public class GameWindow extends JFrame implements ButtonObserveur {
             JPanel buttonPanel = new JPanel(new GridLayout(1, nbPionsCombi + 1, 10, 10));
 
 
-            for (int j = 1; j <= nbPionsCombi; j++) {
+            for (int j = 1; j <= nbPionsCombi; j++)
+            {
                 JButton button = createColorButton(j);
                 this.buttons.add(button);
                 buttonPanel.add(button);
@@ -158,33 +225,30 @@ public class GameWindow extends JFrame implements ButtonObserveur {
             }
             buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
-            this.lignePanels.add(buttonPanel); // Ajoute la référence du JPanel à la liste
-            this.ligneButtons.add(new ArrayList<>(this.buttons)); // Ajoute la référence des boutons à la liste
+            this.lignePanels.add(buttonPanel);
+            this.ligneButtons.add(new ArrayList<>(this.buttons));
 
             PanelJeu.add(buttonPanel);
-            if (i == 0)
-            {
-                buttonPanel.setVisible(true);
-            }
-            else
-            {
-                buttonPanel.setVisible(false);
-            }
+            buttonPanel.setVisible(i == 0);
         }
         this.mainPanel.add(PanelJeu, BorderLayout.NORTH);
         this.mainPanel.revalidate();
         this.mainPanel.repaint();
     }
 
-    private JButton createColorButton(int buttonIndex) {
+    // Créer un bouton qui prend les couleurs possibles (mis en place par le joueur via option)
+    private JButton createColorButton(int buttonIndex)
+    {
         JButton button = new JButton();
-        button.setPreferredSize(new Dimension(50, 50));
+        button.setPreferredSize(new Dimension(70, 50));
         button.setBackground(Color.LIGHT_GRAY);
         button.putClientProperty("currentColorIndex", 0);
         button.putClientProperty("buttonIndex", buttonIndex);
-        button.addActionListener(new ActionListener() {
+        button.addActionListener(new ActionListener()
+        {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e)
+            {
                 JButton clickedButton = (JButton) e.getSource();
                 int currentColorIndex = (int) clickedButton.getClientProperty("currentColorIndex");
                 int buttonIndex = (int) clickedButton.getClientProperty("buttonIndex");
@@ -194,52 +258,56 @@ public class GameWindow extends JFrame implements ButtonObserveur {
 
         return button;
     }
-    private JButton[] createIndiceButtons() {
+    // Créer des boutons d'indices qui changent en fonction de la réponse du joueur
+    private JButton[] createIndiceButtons()
+    {
         JButton[] buttons = new JButton[this.controller.getNbPionsCombi()];
 
-        for (int i = 0; i < this.controller.getNbPionsCombi(); i++) {
+        for (int i = 0; i < this.controller.getNbPionsCombi(); i++)
+        {
             JButton button = new JButton();
-            button.setPreferredSize(new Dimension(40, 40));
+            button.setPreferredSize(new Dimension(50, 30));
             button.setBackground(Color.WHITE);
             button.setEnabled(false);
-            button.setLayout(new GridBagLayout());
-            button.setHorizontalAlignment(SwingConstants.CENTER);
-            button.setVerticalAlignment(SwingConstants.CENTER);
+            Font font = new Font("Arial", Font.PLAIN, 14);
+            button.setFont(font);
+            button.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
             buttons[i] = button;
-        }
 
+        }
         return buttons;
     }
 
-    public void updateButtons(JButton button, Color color) {
+    // Appel de l'observeur pour mettre à jour les boutons
+    public void updateButtons(JButton button, Color color)
+    {
         button.setBackground(color);
         button.repaint();
     }
 
-    public void updateIndiceButtons(ArrayList<String> indices) {
-        for (int i = 0; i < this.controller.getNbPionsCombi(); i++) {
+    // Met à jour les indices du boutons
+    public void updateIndiceButtons(ArrayList<String> indices)
+    {
+        for (int i = 0; i < this.controller.getNbPionsCombi(); i++)
+        {
             String indice = indices.get(i);
-            System.out.println("indice : " + indice);
-            if (!(this.controller.getStrategy() instanceof AffichageNumerique)) {
-                if (Objects.equals(indice, "noir")) {
+            if (!(this.controller.getStrategy() instanceof AffichageNumerique))
+                if (Objects.equals(indice, "noir"))
                     this.ListeIndice.get(i + this.controller.getNbPionsCombi() * this.LigneActuelle).setBackground(Color.BLACK);
-                } else if (Objects.equals(indice, "blanc")) {
+                else if (Objects.equals(indice, "blanc"))
                     this.ListeIndice.get(i + this.controller.getNbPionsCombi() * this.LigneActuelle).setBackground(Color.WHITE);
-                } else if (Objects.equals(indice, "gris")) {
+                else if (Objects.equals(indice, "gris"))
                     this.ListeIndice.get(i + this.controller.getNbPionsCombi() * this.LigneActuelle).setBackground(Color.GRAY);
-                }
-            }
-            else {
+            else
                 this.ListeIndice.get(i + this.controller.getNbPionsCombi() * this.LigneActuelle).setText(indices.get(i));
-                }
-            }
-    }
-
-    public Color[] getValidationTableau(ArrayList<JButton> ligneButtons) {
-        Color[] tableau = new Color[this.controller.getNbPionsCombi()];
-        for (int i = 0; i < this.controller.getNbPionsCombi(); i++) {
-            tableau[i] = ligneButtons.get(i + this.controller.getNbPionsCombi() * this.LigneActuelle).getBackground();
         }
+    }
+    // Renvoi la combinaison actuelle du joueur lors de l'appui de valider
+    public Color[] getValidationTableau(ArrayList<JButton> ligneButtons)
+    {
+        Color[] tableau = new Color[this.controller.getNbPionsCombi()];
+        for (int i = 0; i < this.controller.getNbPionsCombi(); i++)
+            tableau[i] = ligneButtons.get(i + this.controller.getNbPionsCombi() * this.LigneActuelle).getBackground();
         return tableau;
     }
 }
