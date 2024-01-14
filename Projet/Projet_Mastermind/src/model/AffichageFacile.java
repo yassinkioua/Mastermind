@@ -3,6 +3,7 @@ import java.util.ArrayList;
 
 public class AffichageFacile implements AfficheIndiceStrategy
 {
+    // Permet d'afficher les indices dans la console et dans le jeu
     @Override
     public ArrayList<String> afficherIndice(Indice[] indices)
     {

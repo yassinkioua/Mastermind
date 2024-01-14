@@ -31,9 +31,10 @@ public class GameWindow extends JFrame implements ButtonObserveur {
         initializeUI();
     }
 
+    // Permet d'initialiser une partie, méthode mère du jeu
     private void initializeUI()
     {
-        setTitle("Fenêtre de jeu");
+        setTitle("Mastermind - Partie en cours - Manche " + controller.getManche());
         if (this.controller.getNbTentative() == 10)
             setSize(1150, 850);
         else if (this.controller.getNbTentative() == 11)
@@ -65,6 +66,7 @@ public class GameWindow extends JFrame implements ButtonObserveur {
         JLabel scrollingLabel = new JLabel();
         scrollingLabel.setText(final_print);
         statusPanel.add(scrollingLabel);
+        // Permet de faire le défilement vers la droite du texte en bas
         Timer scrollTimer = new Timer(150, new ActionListener()
         {
             @Override
@@ -188,6 +190,7 @@ public class GameWindow extends JFrame implements ButtonObserveur {
         getContentPane().add(this.mainPanel);
     }
 
+    // Créer une ligne : boutons + indices
     private void CreateLine()
     {
         int nbPionsCombi = this.controller.getNbPionsCombi();
@@ -233,6 +236,7 @@ public class GameWindow extends JFrame implements ButtonObserveur {
         this.mainPanel.repaint();
     }
 
+    // Créer un bouton qui prend les couleurs possibles (mis en place par le joueur via option)
     private JButton createColorButton(int buttonIndex)
     {
         JButton button = new JButton();
@@ -254,6 +258,7 @@ public class GameWindow extends JFrame implements ButtonObserveur {
 
         return button;
     }
+    // Créer des boutons d'indices qui changent en fonction de la réponse du joueur
     private JButton[] createIndiceButtons()
     {
         JButton[] buttons = new JButton[this.controller.getNbPionsCombi()];
@@ -273,19 +278,19 @@ public class GameWindow extends JFrame implements ButtonObserveur {
         return buttons;
     }
 
-
+    // Appel de l'observeur pour mettre à jour les boutons
     public void updateButtons(JButton button, Color color)
     {
         button.setBackground(color);
         button.repaint();
     }
 
+    // Met à jour les indices du boutons
     public void updateIndiceButtons(ArrayList<String> indices)
     {
         for (int i = 0; i < this.controller.getNbPionsCombi(); i++)
         {
             String indice = indices.get(i);
-            System.out.println(indice);
             if (!(this.controller.getStrategy() instanceof AffichageNumerique))
                 if (Objects.equals(indice, "noir"))
                     this.ListeIndice.get(i + this.controller.getNbPionsCombi() * this.LigneActuelle).setBackground(Color.BLACK);
@@ -297,7 +302,7 @@ public class GameWindow extends JFrame implements ButtonObserveur {
                 this.ListeIndice.get(i + this.controller.getNbPionsCombi() * this.LigneActuelle).setText(indices.get(i));
         }
     }
-
+    // Renvoi la combinaison actuelle du joueur lors de l'appui de valider
     public Color[] getValidationTableau(ArrayList<JButton> ligneButtons)
     {
         Color[] tableau = new Color[this.controller.getNbPionsCombi()];

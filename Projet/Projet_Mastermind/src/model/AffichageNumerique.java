@@ -1,7 +1,9 @@
 package model;
 import java.util.ArrayList;
 
-public class AffichageNumerique implements AfficheIndiceStrategy {
+public class AffichageNumerique implements AfficheIndiceStrategy
+{
+    // Permet d'afficher les indices dans la console et dans le jeu
     @Override
     public ArrayList<String> afficherIndice(Indice[] indices)
     {

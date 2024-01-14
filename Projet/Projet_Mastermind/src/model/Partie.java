@@ -50,6 +50,7 @@ public class Partie {
             this.couleur_possible[i] = couleursPossibles[i % couleursPossibles.length];
     }
 
+    // Passe à la prochaine couleur sur le bouton en cours
     public void NextColor(JButton button, int currentColorIndex, int buttonIndex)
     {
         Color currentColor = couleur_possible[currentColorIndex];
@@ -77,6 +78,7 @@ public class Partie {
     public void addManche() {this.mancheActuelle++;}
     public void Affichage()
     {
+        System.out.print("\n");
         System.out.println("------------------- MASTERMIND -----------------");
         System.out.println("Nombre de manches : " + this.manche);
         System.out.println("Nombre de pions : " + this.nbpions);
@@ -96,6 +98,8 @@ public class Partie {
     {
         return this.score;
     }
+
+    // Permet d'initialiser le score en fonction de la difficulté des options du joueur
     public void setScore(int score)
     {
         if (getNbpions_combi() == 6 || getNbTentatives() == 10)

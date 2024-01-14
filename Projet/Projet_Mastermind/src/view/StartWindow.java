@@ -19,9 +19,10 @@ public class StartWindow extends JFrame
         initializeUI();
     }
 
+    // Même base que GameWindow, méthode mère de l'initialisation du jeu
     private void initializeUI()
     {
-        setTitle("Mastermind - Game Settings");
+        setTitle("Mastermind - Initialisation");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 400);
         setLocationRelativeTo(null);
@@ -41,6 +42,7 @@ public class StartWindow extends JFrame
         setVisible(true);
     }
 
+    // Création du panel d'entrée (saisi du pseudo)
     private JPanel createFirstCardPanel()
     {
         JPanel panel = new JPanel(new BorderLayout());
@@ -72,7 +74,7 @@ public class StartWindow extends JFrame
 
         return panel;
     }
-
+    // Création du panel d'option
     private JPanel createSecondCardPanel() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -126,6 +128,7 @@ public class StartWindow extends JFrame
         return panel;
     }
 
+    // Permet de générer un panel avec une barre (slider) pour choisir ce que l'on veut
     private JPanel createSliderPanel(String label, JSlider slider)
     {
         JPanel sliderPanel = new JPanel(new BorderLayout());
@@ -135,7 +138,7 @@ public class StartWindow extends JFrame
         sliderPanel.add(slider, BorderLayout.CENTER);
         return sliderPanel;
     }
-
+    // Génère le slider en lui-même
     private JSlider createSlider(int min, int max, int initial)
     {
         JSlider slider = new JSlider(min, max, initial);

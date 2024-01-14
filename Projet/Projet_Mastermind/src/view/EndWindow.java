@@ -10,9 +10,10 @@ import java.awt.event.ActionListener;
 
 public class EndWindow extends JFrame {
 
+    // Fenêtre de fin de jeu
     public EndWindow(PartieController controller)
     {
-        setTitle("Fin de partie");
+        setTitle("MasterMind - Fin de partie");
         setSize(400, 500);
         setResizable(true);
         setLocationRelativeTo(null);

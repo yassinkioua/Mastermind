@@ -16,6 +16,7 @@ public class Manche
     private Color[] possibilite;
     private AfficheIndiceStrategy context;
 
+    // Initialise la manche avec les options du joueur
     public Manche(int nbpions_combi, int nb_tentative, Color[] possible, AfficheIndiceStrategy strategy)
     {
         this.combinaison_secrete = new Color[nbpions_combi];
@@ -28,7 +29,7 @@ public class Manche
             this.indices[k] = Indice.INCORRECT;
         this.context = strategy;
     }
-
+    // Mettre en place la combinaison secrète
     public void setCombiSecrete()
     {
         for (int i = 0; i < this.taille_combi; i++)
@@ -43,16 +44,20 @@ public class Manche
 
     public void affiche_combisecrete()
     {
+        System.out.println("--------------------- SECRET -------------------");
         for (int i = 0; i < this.taille_combi; i++)
             System.out.println("Élément " + i + " : " + getColorName(this.combinaison_secrete[i]));
+        System.out.println("------------------------------------------------");
     }
 
+    // Permet de récupérer la combinaison actuelle
     public void changeColor(Color[] changement)
     {
         for (int i = 0; i < this.taille_combi; i++)
             this.combinaison_actuelle[i] = changement[i];
     }
 
+    // Créer un indice en fonction de la combinaison actuelle et secrète
     public void creeIndice()
     {
         for (int i = 0; i < this.taille_combi; i++)
@@ -79,6 +84,7 @@ public class Manche
         }
     }
 
+    // Vérifie si la manche est gagné
     public boolean estGagnee()
     {
         for (int i = 0; i < this.taille_combi; i++)
@@ -89,8 +95,10 @@ public class Manche
 
     public void afficheIndice()
     {
+        System.out.println("-------------------- INDICES -------------------");
         for (int i = 0; i < this.indices.length; i++)
             System.out.println("Élément " + i + " : " + this.indices[i]);
+        System.out.println("------------------------------------------------");
     }
 
     public void changeStrat(AfficheIndiceStrategy mode)
