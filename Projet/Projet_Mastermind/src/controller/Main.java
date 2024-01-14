@@ -1,6 +1,4 @@
 package controller;
-
-import model.Partie;
 import view.StartWindow;
 
 public class Main {

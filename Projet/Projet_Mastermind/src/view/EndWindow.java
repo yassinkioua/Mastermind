@@ -3,7 +3,6 @@ package view;
 import controller.PartieController;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,11 +10,8 @@ import java.awt.event.ActionListener;
 
 public class EndWindow extends JFrame {
 
-    private PartieController controller;
-
-    public EndWindow(PartieController controller) {
-        this.controller = controller;
-
+    public EndWindow(PartieController controller)
+    {
         setTitle("Fin de partie");
         setSize(400, 500);
         setResizable(true);
@@ -25,8 +21,7 @@ public class EndWindow extends JFrame {
         setLayout(new BorderLayout());
 
         JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS)); // BoxLayout with Y_AXIS alignment
-
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         JLabel resultLabel = new JLabel(controller.hasWon() ? "Bravo, vous avez gagné !" : "Dommage, vous avez perdu...");
@@ -45,7 +40,8 @@ public class EndWindow extends JFrame {
             JPanel colorsPanel = new JPanel();
             colorsPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-            for (Color color : controller.getCombinaisonSecrete()) {
+            for (Color color : controller.getCombinaisonSecrete())
+            {
                 JButton colorButton = new JButton();
                 colorButton.setBackground(color);
                 colorButton.setPreferredSize(new Dimension(50, 50));
@@ -54,7 +50,6 @@ public class EndWindow extends JFrame {
             }
 
             mainPanel.add(colorsPanel);
-
             mainPanel.add(Box.createVerticalStrut(10));
 
             JLabel mancheLabel = new JLabel("Manche : " + controller.getManche() + "/" + controller.getNbManche());
@@ -65,9 +60,11 @@ public class EndWindow extends JFrame {
 
             if (controller.getManche() < controller.getNbManche())
             {
-                nextRoundButton.addActionListener(new ActionListener() {
+                nextRoundButton.addActionListener(new ActionListener()
+                {
                     @Override
-                    public void actionPerformed(ActionEvent e) {
+                    public void actionPerformed(ActionEvent e)
+                    {
                         controller.addManche();
                         GameWindow gameWindow = new GameWindow(controller);
                         controller.initializeManche();
@@ -80,9 +77,11 @@ public class EndWindow extends JFrame {
             }
             JButton restartButton = new JButton("Recommencer");
 
-            restartButton.addActionListener(new ActionListener() {
+            restartButton.addActionListener(new ActionListener()
+            {
                 @Override
-                public void actionPerformed(ActionEvent e) {
+                public void actionPerformed(ActionEvent e)
+                {
                     StartWindow st = new StartWindow();
                     st.setVisible(true);
                     dispose();
@@ -95,9 +94,11 @@ public class EndWindow extends JFrame {
         {
             mainPanel.add(Box.createVerticalGlue());
             JButton newGameButton = new JButton("Nouvelle partie");
-            newGameButton.addActionListener(new ActionListener() {
+            newGameButton.addActionListener(new ActionListener()
+            {
                 @Override
-                public void actionPerformed(ActionEvent e) {
+                public void actionPerformed(ActionEvent e)
+                {
                     StartWindow st = new StartWindow();
                     st.setVisible(true);
                     dispose();

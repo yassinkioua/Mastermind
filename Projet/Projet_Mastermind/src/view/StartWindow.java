@@ -8,7 +8,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class StartWindow extends JFrame {
+public class StartWindow extends JFrame
+{
 
     private CardLayout cardLayout;
     private JPanel cardPanel;
@@ -18,7 +19,8 @@ public class StartWindow extends JFrame {
         initializeUI();
     }
 
-    private void initializeUI() {
+    private void initializeUI()
+    {
         setTitle("Mastermind - Game Settings");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 400);
@@ -39,7 +41,8 @@ public class StartWindow extends JFrame {
         setVisible(true);
     }
 
-    private JPanel createFirstCardPanel() {
+    private JPanel createFirstCardPanel()
+    {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
@@ -56,7 +59,8 @@ public class StartWindow extends JFrame {
         pseudonymPanel.add(nextButton);
         panel.add(pseudonymPanel, BorderLayout.SOUTH);
 
-        nextButton.addActionListener(new ActionListener() {
+        nextButton.addActionListener(new ActionListener()
+        {
             @Override
             public void actionPerformed(ActionEvent e)
             {
@@ -111,7 +115,8 @@ public class StartWindow extends JFrame {
             dispose();
         });
 
-        backButton.addActionListener(new ActionListener() {
+        backButton.addActionListener(new ActionListener()
+        {
             @Override
             public void actionPerformed(ActionEvent e) {
                 cardLayout.show(cardPanel, "first");
@@ -121,7 +126,8 @@ public class StartWindow extends JFrame {
         return panel;
     }
 
-    private JPanel createSliderPanel(String label, JSlider slider) {
+    private JPanel createSliderPanel(String label, JSlider slider)
+    {
         JPanel sliderPanel = new JPanel(new BorderLayout());
         JLabel labelComponent = new JLabel(label);
         labelComponent.setHorizontalAlignment(JLabel.RIGHT);
@@ -130,7 +136,8 @@ public class StartWindow extends JFrame {
         return sliderPanel;
     }
 
-    private JSlider createSlider(int min, int max, int initial) {
+    private JSlider createSlider(int min, int max, int initial)
+    {
         JSlider slider = new JSlider(min, max, initial);
         slider.setMajorTickSpacing(1);
         slider.setPaintTicks(true);

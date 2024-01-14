@@ -2,8 +2,6 @@ package controller;
 
 
 import model.AfficheIndiceStrategy;
-import model.Indice;
-import model.Manche;
 import model.Partie;
 import view.GameWindow;
 
@@ -14,14 +12,13 @@ import java.util.ArrayList;
 
 public class PartieController
 {
-    private Partie partie;
-    private MancheController mancheController;
-    private GameWindow mainWindows;
+    private final Partie partie;
+    private final MancheController mancheController;
     public PartieController()
     {
         this.partie = new Partie();
-        this.mainWindows = new GameWindow(this);
-        this.partie.addObserveurs(this.mainWindows);
+        GameWindow mainWindows = new GameWindow(this);
+        this.partie.addObserveurs(mainWindows);
         this.mancheController = new MancheController();
     }
     public void changeStrategy(AfficheIndiceStrategy modestrategy) { this.partie.change_strategy(modestrategy); this.mancheController.changeStrat(modestrategy);}
@@ -33,24 +30,21 @@ public class PartieController
     public void affichage() { this.partie.Affichage();}
     public void getNextColor(JButton button, int currentColorIndex, int buttonIndex) {this.partie.NextColor(button, currentColorIndex, buttonIndex);}
     public int getNbTentative() { return this.partie.getNbTentatives();}
-    public int getNbPionsCombi() {return this.partie.getNbpions_combi(); }
-    public int getNbManche() {return this.partie.getNbManche();}
-
-    public void initializeManche() {
-        this.mancheController.initializeManche(this.partie.getNbpions_combi(), this.partie.getNbTentatives(), this.partie.getCouleurPossible(), this.partie.getStrategy());
-    }
+    public int getNbPionsCombi() { return this.partie.getNbpions_combi(); }
+    public int getNbManche() { return this.partie.getNbManche();}
+    public void initializeManche() { this.mancheController.initializeManche(this.partie.getNbpions_combi(), this.partie.getNbTentatives(), this.partie.getCouleurPossible(), this.partie.getStrategy()); }
     public void testCombinaison(Color[] validate)
     {
         this.mancheController.check_color(validate);
     }
     public boolean hasWon() { return this.mancheController.hasWon(); }
-    public ArrayList<String> getAfficheIndice() {return this.mancheController.getAfficheIndice();}
-    public AfficheIndiceStrategy getStrategy() {return this.partie.getStrategy();}
+    public ArrayList<String> getAfficheIndice() { return this.mancheController.getAfficheIndice();}
+    public AfficheIndiceStrategy getStrategy() { return this.partie.getStrategy();}
     public int getManche() {return this.partie.getMancheActuelle();}
     public void addManche() { this.partie.addManche();}
-    public void addNickName(String pseudo) {this.partie.setNickName(pseudo);}
-    public String getNickName() {return this.partie.getNickName();}
-    public void addScore(int score) {this.partie.setScore(score);}
+    public void addNickName(String pseudo) { this.partie.setNickName(pseudo);}
+    public String getNickName() { return this.partie.getNickName();}
+    public void addScore(int score) { this.partie.setScore(score);}
     public int getScore() { return this.partie.getScore();}
     public Color[] getCombinaisonSecrete() { return this.mancheController.getCombinaisonSecrete();}
 }

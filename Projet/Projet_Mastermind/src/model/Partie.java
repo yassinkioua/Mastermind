@@ -46,9 +46,8 @@ public class Partie {
                 Color.WHITE
         };
 
-        for (int i = 0; i < this.nbpions; i++) {
+        for (int i = 0; i < this.nbpions; i++)
             this.couleur_possible[i] = couleursPossibles[i % couleursPossibles.length];
-        }
     }
 
     public void NextColor(JButton button, int currentColorIndex, int buttonIndex)
@@ -103,8 +102,7 @@ public class Partie {
             this.score += score * 2;
         else if (getNbpions_combi() == 5 || getNbTentatives() == 11)
             this.score += (int) (score * 1.5);
-        else if (getNbpions_combi() == 4 || getNbTentatives() == 12) {
+        else if (getNbpions_combi() == 4 || getNbTentatives() == 12)
             this.score += score;
-        }
     }
 }

@@ -1,6 +1,7 @@
 package model;
 
-public enum Indice {
+public enum Indice
+{
     BONNE_PLACE,
     MAUVAISE_PLACE,
     INCORRECT;

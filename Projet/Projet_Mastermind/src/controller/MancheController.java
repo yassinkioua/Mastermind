@@ -1,18 +1,15 @@
 package controller;
 
 import model.AfficheIndiceStrategy;
-import model.Indice;
 import model.Manche;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class MancheController {
+public class MancheController
+{
     private Manche manche;
-
-    public MancheController() {;
-    }
-
-    public void initializeManche(int nbPionsCombi, int nbTentative, Color[] possibilite, AfficheIndiceStrategy strategy) {
+    public void initializeManche(int nbPionsCombi, int nbTentative, Color[] possibilite, AfficheIndiceStrategy strategy)
+    {
         this.manche = new Manche(nbPionsCombi, nbTentative, possibilite, strategy);
         this.manche.setCombiSecrete();
     }
@@ -29,14 +26,10 @@ public class MancheController {
     {
         return this.manche.estGagnee();
     }
-
     public ArrayList<String> getAfficheIndice() {return this.manche.getAfficheIndice();}
-
     public void changeStrat(AfficheIndiceStrategy mode)
     {
         this.manche.changeStrat(mode);
     }
     public Color[] getCombinaisonSecrete(){ return this.manche.getCombinaisonSecrete();}
-
-
 }
