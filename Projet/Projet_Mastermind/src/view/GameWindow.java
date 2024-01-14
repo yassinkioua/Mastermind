@@ -31,12 +31,12 @@ public class GameWindow extends JFrame implements ButtonObserveur {
     private void initializeUI() {
         setTitle("Fenêtre de jeu");
         if (this.controller.getNbTentative() == 10)
-            setSize(1050, 750);
+            setSize(1200, 750);
         else if (this.controller.getNbTentative() == 11)
-            setSize(1050, 790);
+            setSize(1200, 790);
         else if (this.controller.getNbTentative() == 12)
-            setSize(1050, 840);
-        setResizable(false);
+            setSize(1200, 840);
+        setResizable(true);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.lignePanels = new ArrayList<>();
@@ -199,7 +199,7 @@ public class GameWindow extends JFrame implements ButtonObserveur {
 
         for (int i = 0; i < this.controller.getNbPionsCombi(); i++) {
             JButton button = new JButton();
-            button.setPreferredSize(new Dimension(30, 30));
+            button.setPreferredSize(new Dimension(40, 40));
             button.setBackground(Color.WHITE);
             button.setEnabled(false);
             button.setLayout(new GridBagLayout());
@@ -219,7 +219,7 @@ public class GameWindow extends JFrame implements ButtonObserveur {
     public void updateIndiceButtons(ArrayList<String> indices) {
         for (int i = 0; i < this.controller.getNbPionsCombi(); i++) {
             String indice = indices.get(i);
-            System.out.println(indice);
+            System.out.println("indice : " + indice);
             if (!(this.controller.getStrategy() instanceof AffichageNumerique)) {
                 if (Objects.equals(indice, "noir")) {
                     this.ListeIndice.get(i + this.controller.getNbPionsCombi() * this.LigneActuelle).setBackground(Color.BLACK);
