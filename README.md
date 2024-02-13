@@ -5,133 +5,49 @@ Mastermind
 
 L'objectif de ce projet est de concevoir une application permettant à un joueur de jouer au mastermind contre l'ordinateur.
 
-Consignes générales
--------------------
+# Mastermind Game in Java
 
-#### Pour démarrer avec le dépôt Git
+Bienvenue dans notre projet de jeu Mastermind réalisé en Java. Ce jeu classique de réflexion vous met au défi de deviner une combinaison secrète de couleurs. Le projet a été développé avec Ryan Gourdon dans le cadre de notre cursus universitaire en BUT Informatique.
 
-1. Créez un groupe `nom1-nom2` où nom1 et nom2 sont les noms de famille des deux membres du binôme
-1. Forkez le dépôt https://git.unistra.fr/a313/a31-mastermind dans le groupe créé ci-dessus
-1. Ajoutez le responsable du module et votre enseignant de TD/TP comme Reporter de votre dépôt
+## Comment jouer
 
-#### Pour toute la durée du projet
+Pour installer le jeu et commencer à jouer, suivez ce [lien](./INSTALL.md) pour consulter les étapes d'installation.
 
-- Ce projet est à réaliser **en binôme**.
-- Vous devez concevoir en UML et implémenter en Java le jeu du Mastermind, en respectant une **architecture MVC** et en proposant une **interface graphique en Swing**.
-- Vous devez respecter les **principes de conception** et mettre en œuvre les **patrons de conception** vus en cours, **lorsque cela est pertinent**. Attention, il ne s'agit pas d'essayer d'utiliser tous les patrons de conception vus en cours !
-- Vous rédigerez parallèlement **un (ou des) rapports** pour expliquer vos choix de conception. Il est possible aussi que vous soyez amenés à renoncer à une partie du développement par manque de temps. Dans ce cas, le rapport est l’endroit où le signaler ("il aurait fallu faire *ceci* mais je n’avais pas assez de temps devant moi et j’ai préféré me concentrer sur *cela* parce que ...").
-- Votre dépôt devra être **mis à jour au minimum après chaque séance de TP** de façon à ce que nous puissions évaluer votre démarche sur toute la durée du projet.
+## Structure du Projet (Modèle-Vue-Contrôleur - MVC)
 
+Ce projet suit le modèle architectural Modèle-Vue-Contrôleur (MVC), séparant les composants de la manière suivante :
 
-Les règles du jeu
------------------
+- **Modèle (package `model`):** Contient les classes qui représentent les données du jeu.
+  - `Partie`: Gère les aspects globaux du jeu, tels que le score, le nombre de manches, etc.
+  - `Manche`: Représente une manche individuelle du jeu, gérant la combinaison secrète et les interactions spécifiques à la manche.
 
-Pour les règles classiques, vous pouvez consulter :
+- **Contrôleur (package `controller`):** Gère la logique du jeu.
+  - `PartieController`: Contrôleur principal qui gère les actions globales du jeu.
+  - `MancheController`: Contrôleur spécifique à une manche qui gère les actions liées à une manche individuelle.
 
-- une version simple [https://www.regles-de-jeux.com/regle-du-mastermind/](https://www.regles-de-jeux.com/regle-du-mastermind/).
-- une explication plus complète : [https://fr.wikihow.com/jouer-au-Mastermind](https://fr.wikihow.com/jouer-au-Mastermind).
+- **Vue (package `view`):** Gère l'interface utilisateur.
+  - `GameWindow`: Fenêtre principale affichant le plateau de jeu.
+  - `StartWindow`: Fenêtre de démarrage pour configurer le jeu.
+  - `EndWindow`: Fenêtre de fin de jeu.
 
+- **Autres (package `utils`):** Contient des utilitaires pour le projet.
+  - `ColorSwap`: Classe utilitaire pour gérer les couleurs.
 
-#### Le vocabulaire
+## Comment Contribuer
 
-Au niveau du vocabulaire, nous emploierons les termes suivants :
+Si vous souhaitez contribuer à l'amélioration du jeu, vous pouvez suivre ces étapes :
 
-- une **combinaison** : c'est une ligne de pions
-  - il y a la **combinaison secrète** et les combinaisons tentées par le joueur, appelées **tentatives**.
-- un **indice** : information sur le pion d'une combinaison, donnée par l'ordinateur, qui indique si le pion est bien placé, mal placé ou absent
-- une **ligne d'indices** : c'est ensemble des indices associés à une combinaison
-- une **manche** : c'est l'ensemble des tentatives ayant permis ou non de trouver une combinaison secrète
-- une **partie** : c'est un ensemble de manches
+1. Fork ce projet.
+2. Créez une branche pour votre fonctionnalité (`git checkout -b amelioration-jeu`).
+3. Effectuez vos modifications et ajoutez-les (`git add .`).
+4. Committez vos modifications (`git commit -m 'Ajout d'une fonctionnalité'`).
+5. Poussez la branche (`git push origin amelioration-jeu`).
+6. Ouvrez une Pull Request.
 
+Nous sommes ouverts à toutes les suggestions et contributions pour rendre ce jeu encore meilleur !
 
-Les fonctionnalités
--------------------
+## Remerciements
 
-Vous devez modéliser et implémenter :
+Un grand merci à Ryan Gourdon qui a été mon partenaire de projet exceptionnel tout au long du développement du Mastermind en Java. Cette collaboration a été enrichissante et a contribué de manière significative à la réussite de ce projet. Nous sommes reconnaissants de l'effort et de l'engagement de chacun, et nous espérons que vous apprécierez jouer à notre version du Mastermind en Java !
 
-- la génération de la combinaison secrète,
-- la génération des indices associés à une combinaison proposée par le joueur,
-- la détection de la victoire et de la défaite du joueur,
-- la gestion des manches et des parties,
-- la gestion du score
-
-en prenant en compte ces spécificités :
-
-- votre application doit disposer au maximum de **8 pions différents**
-- avant de démarrer une partie, le joueur fixe ces paramètres qui seront les mêmes pour toutes ses manches :
-  - le **nombre de manches** : 1 minimum, 3 par défaut, 5 maximum
-  - le **nombre de pions disponibles** : 4 minimum, 8 par défaut, 8 maximum
-  - le **nombre de pions d'une combinaison** : 2 minimum, 4 par défaut, 6 maximum
-  - le **nombre de tentatives** maximum pour trouver la combinaison secrète : 2 minimum, 10 par défaut, 12 maximum
-  - le **mode d'affichage des indices** : facile, classique ou numérique
-- le **score d'une manche** est calculé à partir de la dernière tentative du joueur comme la somme du nombre de pions mal placés, de trois fois celle du nombre de pions bien placés et de 4 points bonus si on est en mode classique.
-
-L'interface graphique
----------------------
-
-Votre application doit proposer 3 écrans :
-
-- un **écran de démarrage** pour choisir les paramètres : nom du joueur, type de partie, etc.
-- un **écran de jeu** avec le plateau qui affiche les combinaisons tentées, les indices associés, etc.
-- un **écran de fin de partie** qui affiche le score du joueur et s'il a gagné ou perdu
-
-#### Les interactions de l'utilisateur
-
-Un joueur doit pouvoir réaliser les actions suivantes à **n'importe quel moment d'une partie** :
-
-- choisir les couleurs de sa prochaine combinaison
-- valider sa combinaison pour recevoir l'indice de l'ordinateur
-- remettre à zéro sa combinaison
-- abandonner la manche courante pour passer à la suivante
-
-### L'affichage des indices
-
-L'affichage des indices dépend du mode choisit au niveau des paramètres :
-
-- **mode "facile"** : les jetons noirs et blancs sont affichés en correspondance de la combinaison proposée par le joueur (i.e. à la même place)
-- **mode "classique"** (mode par défaut) : les jetons noirs sont affichés en premier, puis les jetons blancs
-- **mode numérique** : on affiche le nombre de pions bien placés et le nombre de pions mal placés.
-
-Bonus
------
-
-Pouvoir recommencer une partie sans relancer l'application.
-
-Les rendus
-----------
-
-### 1er rendu
-
-Date limite : le dimanche **10/12 à 23h59**
-
-Documents :
-
-- le **diagramme de classes** UML
-  - le package `model` doit être décris en anticipant tout le développement
-  - les packages `controller` et `view` doivent proposer une version de base mais peuvent être incomplets
-- le **code source**
-- un **rapport** pour expliquer vos choix de conception
-
-Le rendu est à faire sur votre dépôt Git **sur une branche nommée `rendu1`**.
-
-### 2ème rendu
-
-Date limite : le dimanche **14/01 à 23h59**
-
-Documents :
-
-- le **diagramme de classes** UML
-	- il doit être entièrement cohérent avec le code
-	- il doit représenter l'intégralité de votre application
-- le **code source**
-- un **exécutable au format JAR**
-- un **mode d'emploi** nommé `INSTALL.md` à la racine de votre projet, qui explique comment installer et lancer votre application
-- un **rapport** pour présenter vos nouveaux choix de conception depuis le 1er rendu et expliquer les raisons des évolutions des choix de conception qui avaient été annoncés au 1er rendu.
-
-Le rendu est à faire sur votre dépôt Git **sur une branche nommé `rendu2`**.
-
-### Précisions
-
-- Vos diagrammes UML doivent être au format PlantUML et svg,
-- À la fin du projet, votre dépôt devra contenir au minimum une branche `rendu1` et une branche `rendu2`, ce seront les seules branches évaluées. Vous êtes libre de gérer le reste de votre dépôt comme vous le souhaitez.
-- Pensez à vérifier que votre exécutable fonctionne sur Linux, Windows et Mac.
+Joyeux codage à tous ! 🚀
