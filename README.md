@@ -3,10 +3,6 @@ Mastermind
 
 ![](mastermind.jpg)
 
-L'objectif de ce projet est de concevoir une application permettant à un joueur de jouer au mastermind contre l'ordinateur.
-
-# Mastermind Game in Java
-
 Bienvenue dans notre projet de jeu Mastermind réalisé en Java. Ce jeu classique de réflexion vous met au défi de deviner une combinaison secrète de couleurs. Le projet a été développé avec Ryan Gourdon dans le cadre de notre cursus universitaire en BUT Informatique.
 
 ## Comment jouer
